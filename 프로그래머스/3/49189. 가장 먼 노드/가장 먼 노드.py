@@ -8,13 +8,12 @@ def solution(n, edge):
 
     distance = [-1] * (n + 1)
     distance[1] = 0
-    
     queue = deque([1])
 
     while queue:
         nd = queue.popleft()
         for e in edges[nd]:
-            if distance[e] < 0:
+            if distance[e] == -1:
                 queue.append(e)
                 distance[e] = distance[nd] + 1
 
