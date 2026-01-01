@@ -10,8 +10,7 @@ def main():
     
     for i in range(l, n+1):
         x -= i
-        if x < 0:
-            x = -x
+        x = abs(x)
         if i % 3 == 0: 
             x = (x * i) % p
         if i % 15 == 0:
