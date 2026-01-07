@@ -50,7 +50,7 @@ def main():
         for i in range(n): ans = max(ans, int(s[i]))
         return print(ans)
     SA(s)
-    l = 0; r = len(ret) - 1
+    l = 0; r = n
     while l < r:
         mid = l+r>>1
         flag = False
