@@ -43,7 +43,8 @@ def main():
     if(n==k):
         ans = 0
         for i in range(n): ans = max(ans, int(s[i]))
-        return print(ans)
+        print(ans)
+        return 0
     SA(s)
     l = 0; r = n
     while l < r:
@@ -58,7 +59,6 @@ def main():
             if cnt <= k:
                 flag = True
                 break
-
         if flag: r = mid
         else: l = mid + 1
     print(s[ret[l]: ret[l]+(n-1)//k+1])
