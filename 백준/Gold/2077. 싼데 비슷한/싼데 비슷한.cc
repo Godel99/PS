@@ -10,7 +10,7 @@ int main(){
 		cout << "YES\n";
 		int n; cin >> n; S[0] = S[1] = S[2] = S[3] = 0;
 		for(int i = 1; i <= n; i++){
-			int t; cin >> t; S[i%4] += t;
+			int t; cin >> t; S[i&3] += t;
 		}
 		ll m = min({S[0], S[1], S[2], S[3]});
 		if(S[2] == m){
