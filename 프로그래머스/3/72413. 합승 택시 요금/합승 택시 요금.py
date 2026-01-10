@@ -30,6 +30,7 @@ def solution(n, s, a, b, fares):
     distB = dijkstra(b, n, graph)
     ans = INF
     for k in range(1, n+1):
+        if distS[k] == INF or distA == INF or distB == INF: continue
         ans = min(ans, distS[k]+distA[k]+distB[k])
     return ans
 
