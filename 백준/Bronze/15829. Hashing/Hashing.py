@@ -10,7 +10,7 @@ def main():
     s = input()
     h = 0
     for i, c in enumerate(s):
-        h += (ord(c) - ord('a') + 1) * pow(31, i, MOD)
+        h = (h + (ord(c) - ord('a') + 1) * pow(31, i, MOD)) % MOD
     print(h)
 if __name__ == '__main__':
     main()
