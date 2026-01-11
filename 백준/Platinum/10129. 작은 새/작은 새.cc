@@ -18,13 +18,12 @@ int main(){
 
         dp.push_back({0,0,h[0]});
 
-        for (int i = 0; i < n; i++){
+        for (int i = 1; i < n; i++){
             while (dp.size() && dp.front().idx + k < i) dp.pop_front();
             int now = dp.front().val + (bool)(dp.front().h <= h[i]);
-
-            while (dp.size() && dp.back().val > now || dp.back().val == now && dp.back().h <= h[i]) dp.pop_back();
+            while (dp.size() && (dp.back().val > now || dp.back().val == now && dp.back().h <= h[i])) dp.pop_back();
             dp.push_back({i, now, h[i]});
         }
-        cout << dp.back().val << endl;
+        cout << dp.back().val << '\n';
     }
 }
