@@ -18,7 +18,7 @@
 
 <p>아래 <그림 1>과 같이 여러개의 정사각형칸들로 이루어진 정사각형 모양의 종이가 주어져 있고, 각 정사각형들은 하얀색으로 칠해져 있거나 파란색으로 칠해져 있다. 주어진 종이를 일정한 규칙에 따라 잘라서 다양한 크기를 가진 정사각형 모양의 하얀색 또는 파란색 색종이를 만들려고 한다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://www.acmicpc.net/upload/images/bwxBxc7ghGOedQfiT3p94KYj1y9aLR.png" style="height:221px; width:215px"></p>
+<p style="text-align: center;"><img alt="" src="https://onlinejudgeimages.s3-ap-northeast-1.amazonaws.com/upload/images/bwxBxc7ghGOedQfiT3p94KYj1y9aLR.png" style="height:221px; width:215px"></p>
 
 <p>전체 종이의 크기가 N×N(N=2<sup>k</sup>, k는 1 이상 7 이하의 자연수) 이라면 종이를 자르는 규칙은 다음과 같다.</p>
 
