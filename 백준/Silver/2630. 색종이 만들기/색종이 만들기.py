@@ -15,9 +15,9 @@ def main():
                 if p[i][j] != t:
                     h = s // 2
                     w1, b1 = f(x, y, h) 
-                    w2, b2 =f(x, y+h, h)
-                    w3, b3 =f(x+h, y, h)
-                    w4, b4 =f(x+h, y+h, h)
+                    w2, b2 = f(x, y+h, h)
+                    w3, b3 = f(x+h, y, h)
+                    w4, b4 = f(x+h, y+h, h)
                     return (w1+w2+w3+w4, b1+b2+b3+b4)       
         if t: return (0, 1)
         else: return (1, 0)
