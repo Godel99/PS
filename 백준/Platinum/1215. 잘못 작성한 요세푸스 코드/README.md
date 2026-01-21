@@ -99,11 +99,11 @@ $$\sum_{i=l}^{r}k=k(r-l+1)$$
 
 두번째 항:
 
-$$\sum_{i=l}^{r}\lfloor \frac{k}{i} \rfloor=q\cdot\frac{(l+r)(r-l+1)}{2}$$
+$$\sum_{i=l}^{r}i\lfloor \frac{k}{i} \rfloor=i\cdot\frac{(l+r)(r-l+1)}{2}$$
 
 최종적으로 아래 식이 나오게 됩니다.
 
-$$k(r-l+1)-q\cdot\frac{(l+r)(r-l+1)}{2}$$
+$$k(r-l+1)-i\cdot\frac{(l+r)(r-l+1)}{2}$$
 
 위 식을 그대로 계산해주면 동일 몫에 대해서 한번에 계산할 수 있습니다.
 
