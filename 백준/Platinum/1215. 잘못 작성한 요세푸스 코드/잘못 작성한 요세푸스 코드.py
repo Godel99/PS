@@ -11,9 +11,9 @@ def main():
     sq = int(sqrt(k)); ans = 0
     for i in range(1, min(k//sq, n)+1): ans += k%i
     for i in range(1, sq):
-        l = min(k//i, n); r = k//(i+1)+1
-        if l < r: continue
-        ans += k*(l-r+1)-(l+r)*(l-r+1)*i//2
+        l = k//(i+1)+1; r = min(k//i, n)
+        if l > r: continue
+        ans += k*(r-l+1)-(l+r)*(r-l+1)*i//2
     ans += k*max(0, n-k)
     print(ans)
     return 0
