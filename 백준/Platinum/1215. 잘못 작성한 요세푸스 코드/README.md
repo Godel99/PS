@@ -12,17 +12,17 @@
 
 ### 제출 일자
 
-2026년 1월 20일 21:37:33
+2026년 1월 21일 14:40:58
 
 ### 문제 설명
 
 <p>요세푸스 문제는 아래와 같이 풀 수 있다.</p>
 
-<div><div id="highlighter_687542" class="syntaxhighlighter  c"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="c plain">r := 0;</code></div><div class="line number2 index1 alt1"><code class="c keyword bold">for</code> <code class="c plain">i from 1 to n </code><code class="c keyword bold">do</code></div><div class="line number3 index2 alt2"><code class="c spaces">    </code><code class="c plain">r := (r + k) mod i;</code></div><div class="line number4 index3 alt1"><code class="c keyword bold">return</code> <code class="c plain">r;</code></div></div></td></tr></tbody></table></div></div>
+<div><div id="highlighter_539695" class="syntaxhighlighter  c"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="c plain">r := 0;</code></div><div class="line number2 index1 alt1"><code class="c keyword bold">for</code> <code class="c plain">i from 1 to n </code><code class="c keyword bold">do</code></div><div class="line number3 index2 alt2"><code class="c spaces">    </code><code class="c plain">r := (r + k) mod i;</code></div><div class="line number4 index3 alt1"><code class="c keyword bold">return</code> <code class="c plain">r;</code></div></div></td></tr></tbody></table></div></div>
 
 <p>하지만 상근이는 코드를 잘못 읽고 아래와 같이 작성했다.</p>
 
-<div><div id="highlighter_268214" class="syntaxhighlighter  c"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="c plain">r := 0;</code></div><div class="line number2 index1 alt1"><code class="c keyword bold">for</code> <code class="c plain">i from 1 to n </code><code class="c keyword bold">do</code></div><div class="line number3 index2 alt2"><code class="c spaces">    </code><code class="c plain">r := r + (k mod i);</code></div><div class="line number4 index3 alt1"><code class="c keyword bold">return</code> <code class="c plain">r;</code></div></div></td></tr></tbody></table></div></div>
+<div><div id="highlighter_446668" class="syntaxhighlighter  c"><table border="0" cellpadding="0" cellspacing="0"><tbody><tr><td class="gutter"><div class="line number1 index0 alt2">1</div><div class="line number2 index1 alt1">2</div><div class="line number3 index2 alt2">3</div><div class="line number4 index3 alt1">4</div></td><td class="code"><div class="container"><div class="line number1 index0 alt2"><code class="c plain">r := 0;</code></div><div class="line number2 index1 alt1"><code class="c keyword bold">for</code> <code class="c plain">i from 1 to n </code><code class="c keyword bold">do</code></div><div class="line number3 index2 alt2"><code class="c spaces">    </code><code class="c plain">r := r + (k mod i);</code></div><div class="line number4 index3 alt1"><code class="c keyword bold">return</code> <code class="c plain">r;</code></div></div></td></tr></tbody></table></div></div>
 
 <p>n과 k가 주어졌을 때, 상근이의 잘못 작성한 소스를 실행시킨 결과를 출력하는 프로그램을 작성하시오.</p>
 
