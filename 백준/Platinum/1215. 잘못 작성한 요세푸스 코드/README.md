@@ -87,7 +87,9 @@ $$l=\frac{k}{q+1},\ r=\frac{k}{q}$$
 
 라 하면 구간은 $r-l+1$이 됩니다.
 
-${k}\mod{i}$ 는 다시 ${k}\mod{i}=k-i\lfloor \frac{k}{i} \rfloor$($k=iq+r$, $q=\lfloor \frac{k}{i} \rfloor$ 이므로)로 고쳐쓸 수 있고 이는 나머지 연산을 몫 연산으로 바꿔줍니다. 동일한 몫에 대해서 연산을 건너띄는 게 목적이므로 이러한 변형을 하는 것입니다.
+${k}\mod{i}$ 는 다시 ${k}\mod{i}=k-i\lfloor \frac{k}{i} \rfloor$($k=iq+r$, $q=\lfloor \frac{k}{i} \rfloor$ 이므로)로 고쳐쓸 수 있고 이는 나머지 연산을 몫 연산으로 바꿔줍니다. 
+
+동일한 몫에 대해서 연산을 건너띄는 게 목적이므로 이러한 변형을 하는 것입니다.
 
 $$\sum_{i=1}^{n}({k}\mod{i}) = \sum_{i=1}^{n}(k-i\lfloor \frac{k}{i} \rfloor)$$
 
