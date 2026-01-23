@@ -1,16 +1,15 @@
-#include <iostream>
-#include <queue>
+import sys
+def print(*args, sep=" ", end="\n"): sys.stdout.write(sep.join(map(str, args)) + end)
+def input(): return sys.stdin.readline().rstrip()
 
-std::priority_queue<int, std::vector<int>, std::greater<int>> A;
-std::priority_queue<int, std::vector<int>, std::less<int>> B;
-
-int main() {
-    int N, result = 0;
-    std::cin >> N;
-
-    for (int a, i = 0; i < N; ++i) std::cin >> a, A.push(a);
-    for (int b, i = 0; i < N; ++i) std::cin >> b, B.push(b);
-    while (N--) result += A.top() * B.top(), A.pop(), B.pop();
-
-    std::cout << result;
-}
+def main():
+    n = int(input())
+    a = list(map(int, input().split()))
+    b = list(map(int, input().split()))
+    a.sort(); b.sort(reverse=True)
+    s = 0
+    for i in range(n): s += a[i]*b[i]
+    print(s)
+    return 0
+if __name__ == '__main__':
+    sys.exit(main())
