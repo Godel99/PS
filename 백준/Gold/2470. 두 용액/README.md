@@ -32,3 +32,74 @@
 
  <p>첫째 줄에 특성값이 0에 가장 가까운 용액을 만들어내는 두 용액의 특성값을 출력한다. 출력해야 하는 두 용액은 특성값의 오름차순으로 출력한다. 특성값이 0에 가장 가까운 용액을 만들어내는 경우가 두 개 이상일 경우에는 그 중 아무것이나 하나를 출력한다.</p>
 
+# 풀이
+이분탐색으로도 충분히 풀 수 있지만, 속도 면에서는 정렬 후 투 포인터를 쓰는 게 약간 더 낫습니다.
+
+첫 점과 끝 점을 포인터로 잡고 두 합이 음수일 경우 왼쪽에서 한 칸 앞으로 양수일 경우 오른쪽에서 한 칸 뒤로 움직이며 그 합이 0에 가장 가까운 값을 찾아갑니다.
+
+## 구현
+<details>
+<summary>코드</summary>
+
+### Python
+```python
+import sys
+def print(*args, sep=" ", end="\n"): sys.stdout.write(sep.join(map(str, args)) + end)
+def input(): return sys.stdin.readline().rstrip()
+
+def main():
+    n = int(input())
+    a = sorted(list(map(int, input().split())))
+    minv = float('inf')
+    l = 0; r = n-1
+    ans = [a[l], a[r]]
+    while l < r:
+        val = abs(a[l]+a[r])
+        if minv > val: 
+            minv = val
+            ans = [a[l], a[r]]
+            if minv == 0: break
+        if a[l] + a[r] < 0: l += 1
+        else: r -= 1
+    print(*ans)      
+    return 0
+if __name__ == '__main__':
+    sys.exit(main())
+```
+### C++
+```c++
+#include<bits/stdc++.h>
+using namespace std;
+using ll = long long;
+using pll = pair<ll, ll>;
+
+int main(){
+    cin.tie(0);cout.tie(0);ios::sync_with_stdio(false);
+    int n; cin >> n;
+    ll minv = LLONG_MAX;
+    vector<ll> a(n);
+    for(int i = 0; i < n; i++) cin >> a[i];
+    sort(a.begin(), a.end());
+    int l = 0, r = n-1;
+    pll ans;
+    while(l < r){
+        ll val = abs(a[l]+a[r]);
+        if(minv > val){
+            minv = val;
+            ans = {a[l], a[r]};
+            if(!minv) break;
+        }
+        if(a[l] + a[r] < 0) l++;
+        else r--;
+    }
+    cout << ans.first << ' ' << ans.second;
+	return 0;
+}
+```
+
+</details>
+
+## 시간 및 공간 복잡도
+* 시간복잡도: $\mathcal{O}(N \log N)$
+* 공간복잡도: $\mathcal{O}(N)$
+
