@@ -1,15 +1,25 @@
-import sys
-def print(*args, sep=" ", end="\n"): sys.stdout.write(sep.join(map(str, args)) + end)
-def input(): return sys.stdin.readline().rstrip()
+#include<bits/stdc++.h>
+using namespace std;
+using ll = long long;
 
-def main():
-    n = int(input())
-    a = list(map(int, input().split()))
-    b = list(map(int, input().split()))
-    a.sort(); b.sort(reverse=True)
-    s = 0
-    for i in range(n): s += a[i]*b[i]
-    print(s)
-    return 0
-if __name__ == '__main__':
-    sys.exit(main())
+int main(){
+    cin.tie(0);cout.tie(0);ios::sync_with_stdio(false);
+    int n; cin >> n;
+    vector<int> a, b;
+    for(int i = 0; i < n; i++){
+        int k; cin >> k;
+        a.push_back(k);
+    }
+    for(int i = 0; i < n; i++){
+        int k; cin >> k;
+        b.push_back(k);
+    }
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end(), [](const int& x, const int& y){
+        return x > y;
+    });
+    int ans = 0;
+    for(int i = 0; i < n; i++) ans += a[i]*b[i];
+    cout << ans;
+	return 0;
+}
