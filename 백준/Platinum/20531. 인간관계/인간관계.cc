@@ -3,7 +3,7 @@ using namespace std;
 using ll = long long;
 
 const ll MOD = 1'000'000'007;
-int n, m;
+
 vector<vector<ll>> dp;
 vector<int> par;
 
@@ -13,18 +13,18 @@ int f(int x){
     return par[x];
 }
 
-void u(int x, int y){
+bool u(int x, int y){
     x = f(x), y = f(y);
-    if(x == y) return;
-    n--;
+    if(x == y) return false;
     if(par[x] > par[y]) swap(x, y);
     par[x] += par[y];
     par[y] = x;
+    return true;
 }
 
 int main(){
     cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
-    cin >> n >> m;
+    int n, m; cin >> n >> m;
     dp.assign(n+1, vector<ll>(n+1, 0));
     par.assign(n+1, -1);
     for(int i = 1; i <= n; i++){
@@ -36,7 +36,7 @@ int main(){
     }
     while(m--){
         int x, y; cin >> x >> y;
-        u(x, y);
+        if(u(x, y)) n--;
         cout << dp[n][0] << '\n';
     }
     return 0;
