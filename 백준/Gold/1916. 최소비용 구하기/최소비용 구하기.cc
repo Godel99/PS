@@ -15,7 +15,7 @@ int main(){
         e[u].push_back({v, w});
     }
     int start, end; cin >> start >> end;
-    priority_queue<pii> pq; pq.push({0, start});
+    priority_queue<pii, vector<pii>, greater<pii>> pq; pq.push({0, start});
     dp[start] = 0;
     while(pq.size()){
         auto [cost, cur] = pq.top(); pq.pop();
