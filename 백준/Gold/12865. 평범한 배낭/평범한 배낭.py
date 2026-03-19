@@ -7,7 +7,9 @@ def main():
     dp = [0]*(k+1)
     for _ in range(n):
         w, v = map(int, input().split())
-        for i in range(k, w-1, -1): dp[i] = max(dp[i], dp[i-w]+v)
+        if w > k: continue
+        for i in range(k, w-1, -1): 
+            if dp[i] < dp[i-w]+v: dp[i] = dp[i-w]+v
     print(dp[k])
 if __name__ == '__main__':
     main()
