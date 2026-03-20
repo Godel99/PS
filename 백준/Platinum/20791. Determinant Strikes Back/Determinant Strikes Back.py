@@ -9,8 +9,8 @@ def main():
         n, x = nx
         a = list(map(int, input().split()))
         b = list(map(int, input().split()))
-        s = 0
-        for i in range(n): s = (s+(a[i]*b[i]))%MOD
-        print((pow(x, n, MOD)+(pow(x, n-1, MOD)*s)%MOD)%MOD)
+        xx = pow(x, n-1, MOD)
+        for i in range(n): x = (x+a[i]*b[i]%MOD)%MOD
+        print(xx*x%MOD)
 if __name__ == '__main__':
     main()
