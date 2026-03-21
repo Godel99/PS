@@ -18,7 +18,7 @@ def main():
     selected = []
     def dfs(idx, cnt):
         nonlocal ans
-        if len(selected) == m:
+        if cnt == m:
             curdist = 0
             for h_i in range(h_len):
                 minhdist = inf
