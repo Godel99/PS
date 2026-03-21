@@ -10,10 +10,11 @@ def main():
     dp[0][1][0] = 1
     for r in range(n):
         for c in range(2, n):
-            if board[r][c] == 1: continue 
+            if board[r][c]: continue 
             if c > 0: dp[r][c][0] += dp[r][c-1][0] + dp[r][c-1][2]
             if r > 0: dp[r][c][1] += dp[r-1][c][1] + dp[r-1][c][2]
             if r > 0 and c > 0 and board[r-1][c] == 0 and board[r][c-1] == 0: dp[r][c][2] += sum(dp[r-1][c-1])
     print(sum(dp[n-1][n-1]))
+    return
 if __name__ == '__main__':
     main()
