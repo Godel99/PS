@@ -13,7 +13,6 @@ def main():
     dq = deque([n])
     while dq:
         cur = dq.popleft()
-        if cur == k: break
         nxt = cur*2
         if 0 <= nxt < maxl and dp[nxt] == -1:
             dp[nxt] = dp[cur]
