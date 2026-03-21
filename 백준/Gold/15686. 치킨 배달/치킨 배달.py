@@ -16,7 +16,7 @@ def main():
     dist = [[abs(hr-cr)+abs(hc-cc) for cr, cc in chicken] for hr, hc in house]
     ans = inf
     selected = []
-    def dfs(idx):
+    def dfs(idx, cnt):
         nonlocal ans
         if len(selected) == m:
             curdist = 0
@@ -27,11 +27,12 @@ def main():
                 if curdist >= ans: return
             ans = curdist
             return
-        for i in range(idx, c_len): 
-            selected.append(i)
-            dfs(i+1)
-            selected.pop()
-    dfs(0)
+        if idx == c_len: return
+        selected.append(idx)
+        dfs(idx+1, cnt+1)
+        selected.pop()
+        dfs(idx+1, cnt)
+    dfs(0, 0)
     print(ans)        
     return
 if __name__ == '__main__':
