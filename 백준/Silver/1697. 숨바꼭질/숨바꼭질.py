@@ -6,7 +6,7 @@ def f(n, k):
     if n >= k: return n - k
     if k == 1: return abs(n - 1)
     if k&1: return -~min(f(n, k + 1), f(n, k - 1))
-    else: return min(k - n, f(n, k // 2)+1)
+    else: return min(k - n, -~f(n, k // 2))
 
 def main():
     n, k = map(int, input().split())
