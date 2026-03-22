@@ -1,9 +1,5 @@
-from functools import lru_cache
 import sys
 
-sys.setrecursionlimit(10**6)
-
-@lru_cache(None) # 이미 계산한 값은 저장해서 속도를 비약적으로 높임
 def f(n, k):
     if n >= k: return n - k
     if k == 1: return abs(n - 1)
