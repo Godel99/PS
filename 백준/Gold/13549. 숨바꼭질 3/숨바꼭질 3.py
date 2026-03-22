@@ -1,27 +1,18 @@
-import sys 
-print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args)) + end)
-input = lambda: sys.stdin.readline().rstrip('\r\n')
+from functools import lru_cache
+import sys
 
-from collections import deque
+sys.setrecursionlimit(10**6)
 
-def main():
-    n, k = map(int, input().split())
-    if n == k: print(0); return
-    maxl = max(n, k)+2
-    dp = [-1]*maxl
-    dp[n] = 0
-    dq = deque([n])
-    while dq:
-        cur = dq.popleft()
-        nxt = cur*2
-        if 0 <= nxt < maxl and dp[nxt] == -1:
-            dp[nxt] = dp[cur]
-            dq.appendleft(nxt)
-        for nxt in [cur-1, cur+1]:
-            if 0 <= nxt < maxl and dp[nxt] == -1:
-                dp[nxt] = dp[cur]+1
-                dq.append(nxt)
-    print(dp[k])
-    return
-if __name__ == '__main__':
-    main()
+@lru_cache(None) # 이미 계산한 값은 저장해서 속도를 비약적으로 높임
+def f(n, k):
+    if n >= k: return n - k
+    if k == 1: return abs(n - 1)
+    
+    if k % 2 == 0:
+        return min(k - n, f(n, k // 2))
+    else:
+        return 1 + min(f(n, k + 1), f(n, k - 1))
+
+# 실행부
+n, m = map(int, sys.stdin.readline().split())
+print(f(n, m))
