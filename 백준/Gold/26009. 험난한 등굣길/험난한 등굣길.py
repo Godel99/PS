@@ -10,6 +10,9 @@ def main():
     k = int(input())
     visited = [[0]*(m+1) for _ in range(n+1)]
     def mark_blocked(r, c, d):
+        if d == 0:
+            visited[r][c] = 1
+            return
         for i in range(d+1):
             j = d-i
             for tr, tc in [(r+i, c+j), (r+i, c-j), (r-i, c+j), (r-i, c-j)]:
