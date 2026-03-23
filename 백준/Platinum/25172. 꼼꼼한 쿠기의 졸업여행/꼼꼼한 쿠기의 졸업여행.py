@@ -28,9 +28,11 @@ def main():
         vis[cur] = 1
         for nxt in e[cur]:
             if vis[nxt]: u(cur, nxt)
-        ans.append(par[f(cur)] == -i)
-    while ans: print('CONNECT' if ans.pop() else 'DISCONNECT')
-    print('DISCONNECT')
+        if par[f(cur)] == -i: ans.append('CONNECT\n')
+        else: ans.append('DISCONNECT\n')
+    ans.reverse()
+    ans.append('DISCONNECT\n')
+    print(''.join(ans))
     return
 if __name__ == '__main__':
     main()
