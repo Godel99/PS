@@ -13,7 +13,7 @@ def main():
         e[u].append((v, w))
         e[v].append((u, w))
     v1, v2 = map(int, input().split())
-    def dij(start):
+    def dij(start, end):
         dist = [inf]*(n+1)
         dist[start] = 0
         hq = [(0, start)]
@@ -23,12 +23,9 @@ def main():
             for nxt, nw in e[cur]:
                 if dist[nxt] > w+nw:
                     dist[nxt] = w+nw
-                    heapq.heappush(hq, (dist[nxt], nxt))           
-        return dist
-    distv1, distv2 = dij(v1), dij(v2)
-    path1 = distv1[1]+distv1[v2]+distv2[n]
-    path2 = distv2[1]+distv2[v1]+distv1[n]
-    ans = min(path1, path2)
+                    heapq.heappush(hq, (dist[nxt], nxt))  
+        return dist[end]       
+    ans = min(dij(1, v1)+dij(v2, n), dij(1, v2)+dij(v1, n))+dij(v1, v2)
     print(-1 if ans == inf else ans)
     return
 if __name__ == '__main__':
