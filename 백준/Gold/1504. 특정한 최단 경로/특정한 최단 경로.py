@@ -26,7 +26,7 @@ def main():
                     heapq.heappush(hq, (dist[nxt], nxt))  
         return dist[end]       
     ans = min(dij(1, v1)+dij(v2, n), dij(1, v2)+dij(v1, n))+dij(v1, v2)
-    print(-1 if ans == inf else ans)
+    print(-1 if ans >= inf else ans)
     return
 if __name__ == '__main__':
     main()
