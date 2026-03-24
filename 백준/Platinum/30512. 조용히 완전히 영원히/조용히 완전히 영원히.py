@@ -27,8 +27,6 @@ def main():
         if seg[now<<1|1] > seg[now]:
             seg[now<<1|1] = seg[now]
             lazy[now<<1|1] = max(lazy[now<<1|1], lazy[now])
-        seg[now] = inf
-        lazy[now] = 0
         mid = (l+r)>>1
         update(now<<1, l, mid, L, R, x, t)
         update(now<<1|1, mid+1, r, L, R, x, t)
