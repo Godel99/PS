@@ -5,7 +5,6 @@ input = lambda: sys.stdin.readline().rstrip('\r\n')
 def main():
     m = int(input())
     p = list(map(int, input().split()))
-    pre = p[0]
     pcnt = ncnt = ans = 1
     for i in range(1, m):
         if p[i-1] == p[i]: continue
