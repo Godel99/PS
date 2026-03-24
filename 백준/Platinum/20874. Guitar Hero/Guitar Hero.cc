@@ -15,7 +15,7 @@ int main(){
             dec = 1; inc++;
             if(inc > m){
                 while(p[L] == p[L+1]) L++;
-                if(minR[L+1] > R+1) minR[L+1] = R+1;
+                minR[L+1] = R+1;
                 L++; inc--;
             }
         }
@@ -24,7 +24,7 @@ int main(){
             inc = 1; dec++;
             if(dec > m){
                 while(p[L] == p[L+1]) L++;
-                if(minR[L+1] > R+1) minR[L+1] = R+1;
+                minR[L+1] = R+1;
                 L++; dec--;
             }
         }
