@@ -16,16 +16,14 @@ def main():
             if inc > m:
                 while p[L] == p[L+1]: L += 1
                 if minR[L+1] > R+1: minR[L+1] = R+1
-                L += 1
-                inc -= 1
+                L += 1; inc -= 1
         else:
             if inc > 1: L = R-1
             inc = 1; dec += 1
             if dec > m:
                 while p[L] == p[L+1]: L += 1
                 if minR[L+1] > R+1: minR[L+1] = R+1
-                L += 1
-                dec -= 1
+                L += 1; dec -= 1
     for i in range(n-1, 0, -1): minR[i] = min(minR[i], minR[i+1])
     ans = []
     for _ in range(q):
