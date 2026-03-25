@@ -6,6 +6,7 @@ sys.setrecursionlimit(20000)
 
 def main():
     nums = list(map(int, sys.stdin.read().split()))
+    ans = []
     def postorder(start, end):
         if start >= end: return
         root = nums[start]
@@ -16,8 +17,9 @@ def main():
             else: high = mid
         postorder(start+1, low)
         postorder(low, end)
-        print(root)
+        ans.append(str(root))
     postorder(0, len(nums))
+    print('\n'.join(ans))
     return
 if __name__ == '__main__':
     main()
