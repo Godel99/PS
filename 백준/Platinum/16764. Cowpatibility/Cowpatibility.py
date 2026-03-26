@@ -3,17 +3,16 @@ print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args
 input = lambda: sys.stdin.readline().rstrip('\r\n')
 
 from collections import Counter
+from itertools import combinations
 
 def main():
     n = int(input())
     ccnt = Counter()
     for _ in range(n):
         a = sorted(map(int, input().split()))
-        for j in range(1, 32):
-            comb = []
-            for k in range(5):
-                if j>>k & 1: comb.append(a[k])
-            ccnt[tuple(comb)] += 1
+        for r in range(1, 6):
+            for comb in combinations(a, r):
+                ccnt[comb] += 1
     ans = n*(n-1)//2
     for comb, cnt in ccnt.items():
         if cnt < 2: continue
