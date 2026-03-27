@@ -1,0 +1,16 @@
+import sys 
+print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args)) + end)
+input = lambda: sys.stdin.readline().rstrip('\r\n')
+
+def main():
+    a, b = input(), input()
+    n, m = len(a), len(b)
+    dp = [[0]*(m+1) for _ in range(n+1)]
+    for i in range(1, n+1):
+        for j in range(1, m+1):
+            if a[i-1] == b[j-1]: dp[i][j] = dp[i-1][j-1]+1
+            else: dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    print(dp[n][m])
+    return
+if __name__ == '__main__':
+    main()
