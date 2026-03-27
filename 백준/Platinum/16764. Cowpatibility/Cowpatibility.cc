@@ -29,7 +29,7 @@ int main(){
     }
     int sz = 0;
     while(sz < 5 && v.back()[sz] != 0) sz++;
-    ans += (v.back().size()&1 ? -1 : 1)*cnt*(cnt-1)/2;
+    ans += (sz&1 ? -1 : 1)*cnt*(cnt-1)/2;
     cout << ans;
     return 0;
 } 
