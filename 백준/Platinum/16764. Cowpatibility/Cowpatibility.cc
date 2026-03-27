@@ -1,18 +1,19 @@
 #include<bits/stdc++.h>
 using namespace std;
 using ll = long long;
+using ai5 = array<int, 5>;
 
 int main(){
     cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
     int n; cin >> n;
-    vector<vector<int>> v;
+    vector<ai5> v; v.reserve(n*31);
     for(int i = 0; i < n; i++){
-        int a[5]; cin >> a[0] >> a[1] >> a[2] >> a[3] >> a[4];
-        sort(a, a+5);
+        ai5 id; cin >> id[0] >> id[1] >> id[2] >> id[3] >> id[4];
+        sort(id.begin(), id.end());
         for(int j = 1; j < 32; j++){
-            vector<int> tmp;
-            for(int k = 0; k < 5; k++) if(j>>k & 1) tmp.push_back(a[k]);
-            v.push_back(tmp);  
+            ai5 a = {0,}; int idx = 0;
+            for(int k = 0; k < 5; k++) if(j>>k & 1) a[idx++] = id[k];
+            v.push_back(a);  
         }
     }
     sort(v.begin(), v.end());
@@ -20,10 +21,14 @@ int main(){
     for(int i = 1; i < v.size(); i++){
         if(v[i] == v[i-1]) cnt++;
         else{
-            ans += (v[i-1].size()&1 ? -1 : 1)*cnt*(cnt-1)/2;
+            int sz = 0;
+            while(sz < 5 && v[i-1][sz] != 0) sz++;
+            ans += (sz&1 ? -1 : 1)*cnt*(cnt-1)/2;
             cnt = 1;
         }
     }
+    int sz = 0;
+    while(sz < 5 && v.back()[sz] != 0) sz++;
     ans += (v.back().size()&1 ? -1 : 1)*cnt*(cnt-1)/2;
     cout << ans;
     return 0;
