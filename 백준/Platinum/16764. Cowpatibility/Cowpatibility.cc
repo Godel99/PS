@@ -22,13 +22,13 @@ int main(){
         if(v[i] == v[i-1]) cnt++;
         else{
             int sz = 0;
-            while(sz < 5 && v[i-1][sz] != 0) sz++;
+            while(sz < 5 && v[i-1][sz]) sz++;
             ans += (sz&1 ? -1 : 1)*cnt*(cnt-1)/2;
             cnt = 1;
         }
     }
     int sz = 0;
-    while(sz < 5 && v.back()[sz] != 0) sz++;
+    while(sz < 5 && v.back()[sz]) sz++;
     ans += (sz&1 ? -1 : 1)*cnt*(cnt-1)/2;
     cout << ans;
     return 0;
