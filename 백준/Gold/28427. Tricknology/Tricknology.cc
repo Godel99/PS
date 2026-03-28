@@ -6,7 +6,7 @@ int main(){
     cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
     int maxR = 1000001, maxX = 500000;
     vector<bool> p(maxR+1, 1); p[0] = p[1] = 0;
-    for(int i = 2; i <= sqrt(maxR); i++){
+    for(int i = 2; i*i <= maxR; i++){
         if(p[i]) for(int j = i*i; j <= maxR; j += i) p[j] = 0;
     }
     vector<int> ps(maxX+1, 0);
