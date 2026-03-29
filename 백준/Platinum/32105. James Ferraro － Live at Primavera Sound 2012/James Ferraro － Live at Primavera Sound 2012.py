@@ -14,13 +14,11 @@ def main():
     while R > 7:
         flag = 0
         for LL in range(R-1, 0, -1):
-            if (LL+R)%3 == 0 and (LL+R)&1:
-                for L in range(LL, 0, -6):
-                    if isp[(L+R)//3]:
-                        for i in range((R-L+1)//2): ans.append(f'{L+i} {R-i}')
-                        R = L-1
-                        flag = 1
-                        break
+            if (LL+R)%3 == 0 and isp[(LL+R)//3]:
+                for i in range((R-LL+1)//2): ans.append(f'{LL+i} {R-i}')
+                R = LL-1
+                flag = 1
+                break
             if flag: break
     if R >= 6: ans.extend(('1 5', '2 4', '3 6'))
     elif R >= 4: ans.extend(('1 3', '2 4'))
