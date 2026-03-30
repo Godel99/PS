@@ -9,8 +9,8 @@ int main(){
     bool isp[N+1]; memset(isp, 1, sizeof(isp));
     isp[0] = isp[1] = 0;
     for(int i = 4; i <= N; i += 2) isp[i] = 0;
-    for(int i = 3; i*i <= N+1; i++){
-        if(isp[i]) for(int j = i*i; j <= N+1; j+=i) isp[j] = 0;
+    for(int i = 3; i*i <= N+1; i += 2){
+        if(isp[i]) for(int j = i*i; j <= N+1; j+=i*2) isp[j] = 0;
     }
     vector<pll> ans; ans.reserve(N/2);
     while(N > 7){
@@ -23,7 +23,7 @@ int main(){
         }
     
     }
-    if(N >= 6) ans.insert(ans.end(), { {1, 5}, {2, 4}, {3, 6} });
+    if(N >= 6) ans.insert(ans.end(), {{1, 5}, {2, 4}, {3, 6}});
     else if(N >= 4) ans.insert(ans.end(), { {1, 3}, {2, 4} });
     else if(N == 3) ans.push_back({1, 3});
     cout << ans.size() << '\n';
