@@ -2,17 +2,24 @@ import sys
 print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args)) + end)
 input = lambda: sys.stdin.readline().rstrip('\r\n')
 
+from bisect import bisect_left
+
 def main():
     n = int(input())
     a = list(map(int, input().split()))
-    up, down = [1]*n, [1]*n
-    for i in range(n):
-        for j in range(i):
-            if a[j] < a[i]: up[i] = max(up[i], up[j]+1)
-    for i in range(n-1, -1, -1):
-        for j in range(i+1, n):
-            if a[j] < a[i]: down[i] = max(down[i], down[j]+1)
-    ans = max(up[i]+down[i]-1 for i in range(n))
+    def LIS(a):
+        n = len(a)
+        lst = []
+        ret = [0]*n
+        for i in range(n):
+            idx = bisect_left(lst, a[i])
+            if idx == len(lst): lst.append(a[i])
+            else: lst[idx] = a[i]
+            ret[i] = len(lst)
+        return ret
+    up, down = LIS(a), LIS(a[::-1])[::-1]
+    ans = 0
+    for i in range(n): ans = max(ans, up[i]+down[i]-1)
     print(ans)
     return
 if __name__ == '__main__':
