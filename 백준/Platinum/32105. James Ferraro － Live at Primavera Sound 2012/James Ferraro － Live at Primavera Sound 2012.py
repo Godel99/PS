@@ -8,12 +8,13 @@ def main():
     N = int(input())
     isp = bytearray([1])*(N+1)
     isp[0] = isp[1] = 0
-    for i in range(2, int(sqrt(N+1))+1):
-        if isp[i]: isp[i*i:(N+1):i] = bytearray([0])*len(range(i*i, (N+1), i))
+    isp[4::2] = bytearray([0]) * len(range(4, N + 1, 2))
+    for i in range(3, int((N+1)**0.5)+1, 2):
+        if isp[i]: isp[i*i:(N+1):i*2] = bytearray([0])*len(range(i*i, (N+1), i*2))
     ans = []
     while N > 7:
-        r = ((3-N)%6+6)%6
-        s = (N-1)-((N-1-r)%6+6)%6
+        r = (3-N)%6
+        s = (N-1)-(N-1-r)%6
         for L in range(s, 0, -6):
             if isp[(L+N)//3]:
                 for i in range((N-L+1)//2): ans.append(f'{L+i} {N-i}')
