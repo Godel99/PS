@@ -18,8 +18,7 @@ def main():
             if i%p == 0: break
     ans = 1
     for p in primes:
-        pi = p
-        ex = 0
+        pi, ex = p, 0
         while pi <= n:
             ex = (ex+(n//pi)*(m//pi))
             pi *= p
