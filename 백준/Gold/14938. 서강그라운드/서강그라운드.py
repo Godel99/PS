@@ -19,6 +19,7 @@ def main():
         hq = [(0, start)]
         while hq:
             d, cur = heapq.heappop(hq)
+            if d > m: break
             if dist[cur] < d: continue
             for nxt, nd in e[cur]:
                 cost = d+nd
