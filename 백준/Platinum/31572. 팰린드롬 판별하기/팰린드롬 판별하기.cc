@@ -1,46 +1,32 @@
-#include <vector>
+#include<bits/stdc++.h>
+using namespace std;
 
-extern int count_pair(int x, int y, int z);
-extern int find_character(int x, std::vector<int> Y);
+extern int count_pair(int, int, int);
+extern int find_character(int, vector<int>);
 
-int guess_palindromicity(int N) {
-    std::vector<int> refs;
-
-    // 첫 번째 원소와 마지막 원소 비교
-    if (find_character(0, {N - 1}) == 0) {
-        return 0;
-    }
-    refs.push_back(0);
-
-    for (int i = 1; i < N / 2; ++i) {
-        int valid = -1;
-        
-        for (int r : refs) {
-            int c = count_pair(r, i, N - 1 - i);
-            
-            if (c == 0) {
-                return 0; // 팰린드롬 조건 위배
-            } 
-            if (c == 3) {
-                valid = 1; // 팰린드롬 조건 만족 확인 완료
-                break;
-            }
-            // c == 1인 경우 다음 기준값(r)으로 계속 검증
+int guess_palindromicity(int n){
+    vector<int> one;
+    int thr = -1;
+    for(int i = 0; i < (n-1)/2; i++){
+        int qry = count_pair(i, (n-1)/2, n-1-i);
+        if(qry == 0) return 0;
+        if(qry == 1){
+            one.push_back(i);
+            one.push_back(n-1-i);
         }
-
-        // 모든 refs에 대해 count_pair 결과가 1인 경우
-        if (valid == -1) {
-            if (refs.size() < 3) {
-                // 기준값이 3개 미만이면 find_character를 통해 직접 확인
-                if (find_character(i, {N - 1 - i}) == 0) {
-                    return 0;
-                }
-                // 새로운 독립적인 값의 쌍을 발견했으므로 기준점에 추가
-                refs.push_back(i);
-            }
-            // refs.size() == 3 이라면 비둘기집 원리에 의해 무조건 팰린드롬 쌍임이 보장됨
+        else thr = i;
+    }
+    if(~n&1){
+        if(thr < 0){
+            int qry = count_pair(0, (n-1)/2, (n+1)/2);
+            if(qry != 1) return 0;
+            qry = count_pair(0, (n+1)/2, n-1);
+            if(qry != 1) return 0;
+        }
+        else{
+            int qry = count_pair((n-1)/2, (n+1)/2, thr);
+            if(qry != 3) return 0;
         }
     }
-
-    return 1;
+    return (one.empty() || !find_character((n-1)/2, one));
 }
