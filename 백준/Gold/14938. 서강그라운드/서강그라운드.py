@@ -22,7 +22,7 @@ def main():
             if dist[cur] < d: continue
             for nxt, nd in e[cur]:
                 cost = d+nd
-                if dist[nxt] >cost and m >= cost:
+                if dist[nxt] > cost and m >= cost:
                     dist[nxt] = cost
                     heapq.heappush(hq, (cost, nxt))
         return sum(t[i-1] for i in range(1, n+1) if dist[i] <= m)
