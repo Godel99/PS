@@ -18,14 +18,11 @@ int guess_palindromicity(int n){
     }
     if(~n&1){
         if(thr < 0){
-            int qry = count_pair(0, (n-1)/2, (n+1)/2);
-            if(qry != 1) return 0;
-            qry = count_pair(0, (n+1)/2, n-1);
-            if(qry != 1) return 0;
+            if(count_pair(0, (n-1)/2, (n+1)/2) != 1) return 0;
+            if(count_pair(0, (n+1)/2, n-1) != 1) return 0;
         }
         else{
-            int qry = count_pair((n-1)/2, (n+1)/2, thr);
-            if(qry != 3) return 0;
+            if(count_pair((n-1)/2, (n+1)/2, thr) != 3) return 0;
         }
     }
     return (one.empty() || !find_character((n-1)/2, one));
