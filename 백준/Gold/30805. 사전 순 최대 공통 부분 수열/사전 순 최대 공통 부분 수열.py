@@ -4,27 +4,24 @@ input = lambda: sys.stdin.readline().rstrip('\r\n')
 
 def main():
     n = int(input())
-    a = sorted(((int(v), i) for i, v in enumerate(input().split())), key=lambda x: (-x[0], x[1]))
+    *a, = map(int, input().split())
     m = int(input())
-    b = sorted(((int(v), i) for i, v in enumerate(input().split())), key=lambda x: (-x[0], x[1]))
-    lia = lib = -1
-    pa = pb = 0
+    *b, = map(int, input().split())
+    maxl = 0
+    if s := set(a) & set(b): maxl = max(s)
+    acur = bcur = 0
     ans = []
-    while pa < n and pb < m:
-        va, ia = a[pa]
-        vb, ib = b[pb]
-        if va == vb:
-            if ia > lia and ib > lib:
-                ans.append(va)
-                lia, lib = ia, ib
-                pa += 1; pb += 1
-            else:
-                if ia <= lia: pa +=1
-                else: pb += 1
-        elif va > vb: pa += 1
-        else: pb += 1
+    for x in range(maxl, 0, -1):
+        while True:
+            if x in a[acur:] and x in b[bcur:]:
+                anxt = a.index(x, acur)
+                bnxt = b.index(x, bcur)
+                ans.append(x)
+                acur = anxt+1
+                bcur = bnxt+1
+            else: break
     print(len(ans))
-    print(*ans)
+    if ans: print(*ans)
     return  
 if __name__ == '__main__':
     main()
