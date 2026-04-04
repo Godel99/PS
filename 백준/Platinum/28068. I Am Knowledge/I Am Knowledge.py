@@ -15,9 +15,9 @@ def main():
     for a, b in pb:
         if a > joy: print(0); return
         joy += b-a
-    for b, a in mb:
-        if a > joy: print(0); return
-        joy -= a-b
+    for a, b in mb:
+        if b > joy: print(0); return
+        joy -= b-a
     print(1)
     return  
 if __name__ == '__main__':
