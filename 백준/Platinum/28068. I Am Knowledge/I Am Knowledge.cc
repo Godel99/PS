@@ -19,9 +19,9 @@ int main(){
         if(a > joy) return !(cout << 0);
         joy += b-a;
     }
-    for(auto [b, a] : mb){
-        if(a > joy) return !(cout << 0);
-        joy -= a-b;
+    for(auto [a, b] : mb){
+        if(b > joy) return !(cout << 0);
+        joy -= b-a;
     }
     cout << 1;
     return 0;
