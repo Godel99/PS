@@ -2,8 +2,6 @@ import sys
 print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args)) + end)
 input = lambda: sys.stdin.readline().rstrip('\r\n')
 
-from collections import deque
-
 def main():
     n, m = map(int, input().split())
     board = [list(map(int, input().split())) for _ in range(n)]
@@ -12,11 +10,9 @@ def main():
     che = [(0, 0)]
     time = -1
     while che:
-        nche = deque()
-        idx = 0
-        while idx < len(che):
-            r, c = che[idx]
-            idx += 1
+        nche = []
+        while che:
+            r, c = che.pop()
             for dr, dc in delta:
                 nr, nc = r+dr, c+dc
                 if 0 <= nr < n and 0 <= nc < m:
