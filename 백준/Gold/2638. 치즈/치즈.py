@@ -9,12 +9,14 @@ def main():
     board = [list(map(int, input().split())) for _ in range(n)]
     delta = ((1, 0), (-1, 0), (0, 1), (0, -1))
     board[0][0] = -1
-    che = deque([(0, 0)])
+    che = [(0, 0)]
     time = -1
     while che:
         nche = deque()
-        while che:
-            r, c = che.popleft()
+        idx = 0
+        while idx < len(che):
+            r, c = che[idx]
+            idx += 1
             for dr, dc in delta:
                 nr, nc = r+dr, c+dc
                 if 0 <= nr < n and 0 <= nc < m:
