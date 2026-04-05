@@ -36,8 +36,8 @@ def main():
                             can.append((nx, ny))
                             mind = dist[nx][ny]
                         else:dq.append((nx, ny))
-        if not can: return None
-        return min(can), mind
+        if can: return min(can), mind
+        else: return None
     while sh := getfish(x, y, size):
         (x, y), d = sh
         board[x][y] = 0
