@@ -6,36 +6,20 @@ from math import isqrt
 
 def main():
     n = int(input())
-    if n == 0: print('3\n+ 3\n+ 4\n- 5'); return
-    re = 0
-    if n < 0: re = 1; n = abs(n)
-    pos, neg = [], []
-    if isqrt(n)*isqrt(n) == n: pos.append(isqrt(n))
-    elif n&1:
-        pos.append((n+1)//2)
-        neg.append((n+1)//2-1)
-    elif n&3 == 0:
-        pos.append((n>>2)+1)
-        neg.append((n>>2)-1)
-    else:
-        flag = 1
-        for i in range(1, 1000_000):
-            n_i = n-i*i
-            if n_i <= i*i: break
-            if isqrt(n_i)*isqrt(n_i) == n_i:
-                pos.append(isqrt(n_i))
-                pos.append(i)
-                flag = 0
-                break
-        if flag:
-            pos.append(1000_003)
-            n = 1000_003*1000_003-n
-            neg.append((n+1)//2)
-            pos.append((n+1)//2-1)
-    if re: pos, neg = neg, pos
-    print(len(pos)+len(neg))
-    for p in pos: print(f'+ {p}')
-    for n in neg: print(f'- {n}')
+    op = ['-','+'] if n < 0 else ['+', '-']
+    n = abs(n)
+    if n == 0: print('3\n+ 5\n- 4\n- 3\n'); return
+    if n == 2: print(f'3\n{op[0]} 6\n{op[1]} 5\n{op[1]} 3\n'); return
+    r = isqrt(n)
+    if r*r == n: print(f'1\n{op[0]} {r}\n'); return
+    if n&1: print(f'2\n{op[0]} {n//2+1}\n{op[1]} {n//2}'); return
+    if n&3 == 0: print(f'2\n{op[0]} {n//4+1}\n{op[1]} {n//4-1}'); return
+    l = isqrt(n//2)
+    for p in range(1, l+1):
+        t = n-p*p
+        re = isqrt(t)
+        if re*re == t: print(f'2\n{op[0]} {re}\n{op[0]} {p}'); return
+    print(f'3\n{op[1]} 1\n{op[0]} {n//2+1}\n{op[1]} {n//2}\n')
     return  
 if __name__ == '__main__':
     main()
