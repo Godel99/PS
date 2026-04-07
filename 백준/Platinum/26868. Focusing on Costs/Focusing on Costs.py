@@ -6,19 +6,14 @@ def main():
     a, b = map(int, input().split())
     a *= a; b *= b
     ans = []
-    def gcd(a, b):
-        if a == 0: return
-        if a == b: 
-            ans.append('cos'); 
-            return
-        if a > b:
+    while a != b:
+        if a < b:
+            b -= a
+            ans.extend(['sin', 'atan'])
+        else:
+            a, b = b, a
             ans.extend(['tan', 'acos', 'sin', 'atan'])
-            gcd(b, a)
-            return
-        ans.extend(['sin', 'atan'])
-        gcd(a, b-a)
-        return
-    gcd(a, b)
+    ans.append('cos')
     print(len(ans))
     print(*reversed(ans))
     return
