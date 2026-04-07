@@ -2,27 +2,29 @@
 using namespace std;
 using ll = long long;
 
-vector<string> ans;
-
-void gcd(int a, int b){
-    if(a == 0) return;
-    if(a == b) return ans.push_back("cos");
-    if(a > b){
-        ans.insert(ans.end(), {"tan", "acos", "sin", "atan"});
-        gcd(b, a);
-        return;
-    }
-    ans.insert(ans.end(), {"sin", "atan"});
-    gcd(a, b-a);
-    return;
-}
-
 int main() {
     cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
     int a, b; cin >> a >> b;
     a *= a; b *= b;
-    gcd(a, b);
+    stack<string> ans;
+    while(a != b){
+        if(a < b){
+            b -= a;
+            ans.push("sin");
+            ans.push("atan");
+        }
+        else{
+            swap(a, b);
+            ans.push("tan");
+            ans.push("acos");
+            ans.push("sin");
+            ans.push("atan");
+        }
+    }
+    ans.push("cos");
     cout << ans.size() << '\n';
-    for(int i = ans.size()-1; i >= 0; i--) cout << ans[i] << ' ';
+    while(ans.size()){
+        cout << ans.top() << ' '; ans.pop();
+    }
     return 0;
 }
