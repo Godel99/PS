@@ -13,7 +13,7 @@ def main():
     for i in range(1, t+1):
         n = int(input())
         if n <= N: ans = dp[n]
-        else: ans = log(n)+E+1/2*n-1/12*n*n+1/120*n*n*n*n
+        else: ans = log(n)+E+1/(2*n)-1/(12*n*n)+1/(120*n*n*n*n)
         print(f'Case #{i}: {ans:.12f}')
     return
 if __name__ == "__main__":
