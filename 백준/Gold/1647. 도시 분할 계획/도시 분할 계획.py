@@ -7,8 +7,8 @@ def main():
     e = []
     for _ in range(m):
         u, v, w = map(int, input().split())
-        e.append((w, u, v))
-    e.sort()
+        e.append((u, v, w))
+    e.sort(key=lambda x: x[2])
     par = [-1]*(n+1)
     def find(x):
         if par[x] < 0: return x
@@ -21,7 +21,7 @@ def main():
         par[x] += par[y]
         par[y] = x
     maxw = sumw = cnt = 0
-    for w, u, v, in e:
+    for u, v, w in e:
         if find(u) != find(v):
             unite(u, v)
             sumw += w
