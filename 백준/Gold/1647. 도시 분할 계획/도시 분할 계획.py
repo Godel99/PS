@@ -4,6 +4,7 @@ print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args
 
 def main():
     n, m = map(int, input().split())
+    if n == 2: print(0); return
     e = []
     for _ in range(m):
         u, v, w = map(int, input().split())
@@ -20,15 +21,14 @@ def main():
         if par[x] > par[y]: x, y = y, x
         par[x] += par[y]
         par[y] = x
-    maxw = sumw = cnt = 0
+    ans = cnt = 0
     for u, v, w in e:
         if find(u) != find(v):
             unite(u, v)
-            sumw += w
-            maxw = w
+            ans += w
             cnt += 1
-        if cnt == n-1: break
-    print(sumw-maxw)
+        if cnt == n-2: break
+    print(ans)
     return
 if __name__ == "__main__":
     main()
