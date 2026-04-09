@@ -26,7 +26,7 @@ int main(){
     vector<ai3> e(m); par.assign(n+1, -1);
     for(int i = 0; i < m; i++){
         int u, v, w; cin >> u >> v >> w;
-        e.push_back({u, v, w});
+        e[i] = {u, v, w};
     }
     sort(e.begin(), e.end(), [](const ai3& a, const ai3& b){
         return a[2] < b[2];
