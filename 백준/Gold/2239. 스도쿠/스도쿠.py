@@ -97,9 +97,9 @@ def main():
         while ava:
             bit = ava & -ava
             num = bit.bit_length() - 1
-            update(r, c, num, True)
+            update(r, c, num, 1)
             dfs(idx + 1)
-            update(r, c, num, False)
+            update(r, c, num, 0)
             ava &= ~bit
     dfs(0)
     return
