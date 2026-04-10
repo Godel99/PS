@@ -66,6 +66,24 @@ def main():
                         update(nr, c, num, 1)
                         flag = 1
                     acol &= ~bit
+            for b in range(9):
+                abox = FULL&~boxc[b]
+                while abox:
+                    bit = abox&-abox
+                    num = bit.bit_length()-1
+                    nr, nc, cnt = -1, -1, 0
+                    for i in range(9):
+                        r = (b//3)*3+(i//3)
+                        c = (b%3)*3+(i%3)
+                        if board[r][c] == 0:
+                            if not (rowc[r]&bit or colc[c]&bit):
+                                cnt += 1
+                                nr, nc = r, c
+                                if cnt > 1: break
+                    if cnt == 1:
+                        update(nr, nc, num, 1)
+                        flag = 1
+                    abox &= ~bit
             if not flag: break
     propa()
     blank = [(r, c) for r in range(9) for c in range(9) if board[r][c] == 0]
