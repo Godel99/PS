@@ -33,9 +33,9 @@ ll Sd(int d){
         if(i < d+1) num = (num*suff[i+1])%MOD;
         ll den = (invf[i]*invf[d+1-i])%MOD;
         if((d+1-i)%2) den = MOD-den;
-        ll term = y[i] * num % MOD;
-        term = term * den % MOD;
-        ret = (ret + term) % MOD;
+        ll term = y[i]*num%MOD;
+        term = term*den%MOD;
+        ret = (ret+term)%MOD;
     }
     return ret;
 }
