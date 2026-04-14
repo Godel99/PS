@@ -33,7 +33,7 @@ ll Sd(int d){
         if(i < d+1) num = (num*suff[i+1])%MOD;
         ll den = (invf[i]*invf[d+1-i])%MOD;
         if((d+1-i)%2) den = MOD-den;
-        ret = (ret+y[i]*num*MOD*den)%MOD;
+        ret = (ret+y[i]*num%MOD*den)%MOD;
     }
     return ret;
 }
