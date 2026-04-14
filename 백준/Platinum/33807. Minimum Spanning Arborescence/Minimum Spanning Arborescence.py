@@ -2,8 +2,6 @@ import sys
 input = lambda: sys.stdin.readline().rstrip()
 print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args)) + end)
 
-from collections import defaultdict
-
 def main():
     MOD = 998244353
     n, m, k = map(int, input().split())
@@ -11,10 +9,10 @@ def main():
     for _ in range(m):
         _, y = map(int, input().split())
         deg[y] += 1
-    vcnt = defaultdict(int)
+    vcnt = {}
     maxd = 0
     for i in range(2, n+1):
-        if deg[i]: vcnt[deg[i]] += 1
+        if deg[i]: vcnt[deg[i]] = vcnt.get(deg[i], 0) + 1
         if deg[i] > maxd: maxd = deg[i]
     fact = [1]*(maxd+3)
     invf = [1]*(maxd+3)
