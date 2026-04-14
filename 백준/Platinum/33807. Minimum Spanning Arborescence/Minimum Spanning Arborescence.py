@@ -14,7 +14,6 @@ def main():
     for i in range(2, n+1):
         if deg[i]: vcnt[deg[i]] += 1
         if deg[i] > maxd: maxd = deg[i]
-    fact = [1]*(maxd+3)
     invf = [1]*(maxd+3)
     fact = 1
     for i in range(1, maxd+3): fact = (fact * i)%MOD
