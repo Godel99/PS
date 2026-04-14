@@ -22,7 +22,7 @@ def main():
         for nxt in e[cur]:
             deg[nxt] -= 1
             if deg[nxt] == 0: dq.append(nxt)
-    print(' '.join(map(str, ans)))
+    print(*ans)
     return
 if __name__ == "__main__":
     main()
