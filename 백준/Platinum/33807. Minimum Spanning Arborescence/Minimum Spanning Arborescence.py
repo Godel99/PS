@@ -16,11 +16,11 @@ def main():
         if deg[i] > maxd: maxd = deg[i]
     fact = [1]*(maxd+3)
     invf = [1]*(maxd+3)
-    for i in range(1, maxd+3): fact[i] = (fact[i-1]*i)%MOD
-    invf[maxd+2] = pow(fact[maxd+2], MOD-2, MOD)
+    fact = 1
+    for i in range(1, maxd+3): fact = (fact * i)%MOD
+    invf[maxd+2] = pow(fact, MOD-2, MOD)
     for i in range(maxd+1, -1, -1): invf[i] = (invf[i+1]*(i+1))%MOD
     def Sd(d):
-        ret = 0
         y = [0]*(d+2)
         for i in range(1, d+2): y[i] = (y[i-1]+pow(i, d, MOD))%MOD
         if k <= d+1: return y[k]
@@ -28,11 +28,12 @@ def main():
         suff = [1]*(d+2)
         pref[0] = k
         for i in range(1, d+2): pref[i] = (pref[i-1]*(k-i))%MOD
-        suff[d+1] = (k-d-1)
+        suff[d+1] = k-d-1
         for i in range(d, -1, -1): suff[i] = (suff[i+1]*(k-i))%MOD
+        ret = 0
         for i in range(d+2):
             num = 1
-            if i > 0: num = (num*pref[i-1])%MOD
+            if i: num = (num*pref[i-1])%MOD
             if i < d+1: num = (num*suff[i+1])%MOD
             den = (invf[i]*invf[d+1-i])%MOD
             if (d+1-i)%2: den = MOD-den
