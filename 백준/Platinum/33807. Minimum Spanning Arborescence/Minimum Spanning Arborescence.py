@@ -32,22 +32,24 @@ def main():
     for i in range(size-2, -1, -1):
         inv_fact[i] = inv_fact[i+1] * (i+1) % MOD
 
-    # ── 2. k의 falling factorial & 역수 precompute ───────────────────
-    # fall[i] = k*(k-1)*...*(k-i)  (i+1개 항의 곱)
-    fall_size = maxd + 2  # 인덱스 0..maxd+1
+    # ── 2. fall, inv_fall, inv_kj precompute ─────────────────────────
+    # Lagrange 보간은 k > d+1 (즉 k >= d+2) 일 때만 사용되므로
+    # 접근하는 최대 인덱스 = d+1 <= k-1
+    # → k-1까지만 계산하면 충분하고, 그 범위에서 fall 원소는 모두 양수
+    safe_end = min(k - 1, maxd + 1)  # 실제 필요한 최대 인덱스
+    fall_size = safe_end + 1
+
     fall = [0] * fall_size
     fall[0] = k % MOD
     for i in range(1, fall_size):
         fall[i] = fall[i-1] * ((k - i) % MOD) % MOD
 
-    # inv_fall[i] = 1/fall[i]  (배치 역원: modpow 1회)
     inv_fall = [0] * fall_size
     inv_fall[-1] = pow(fall[-1], MOD-2, MOD)
     for i in range(fall_size-2, -1, -1):
         inv_fall[i] = inv_fall[i+1] * ((k - i - 1) % MOD) % MOD
 
     # inv_kj[i] = 1/(k-i)
-    #   = fall[i-1] * inv_fall[i]  (i>=1),  inv_fall[0]  (i=0)
     inv_kj = [0] * fall_size
     inv_kj[0] = inv_fall[0]
     for i in range(1, fall_size):
@@ -68,8 +70,6 @@ def main():
         if k <= d + 1:
             return y[k]
 
-        # 라그랑주 보간: x=k, 보간점 (0,y[0])...(d+1,y[d+1])
-        # numerator_i = fall[d+1] / (k-i)  ← pref/suff 배열 불필요
         P = fall[d + 1]
         ret = 0
         for i in range(d + 2):
