@@ -23,9 +23,9 @@ ll Sd(int d){
     if(k <= d+1) return y[k];
     vector<ll> pref(d+2, 1), suff(d+2, 1);
     pref[0] = k;
-    for(int i = 1; i < d+2; i++) pref[i] = (pref[i-1]*(k-i+MOD))%MOD;
+    for(int i = 1; i < d+2; i++) pref[i] = (pref[i-1]*(k-i))%MOD;
     suff[d+1] = k-d-1;
-    for(int i = d; i > 0; i--) suff[i] = (suff[i+1]*(k-i+MOD))%MOD;
+    for(int i = d; i > 0; i--) suff[i] = (suff[i+1]*(k-i))%MOD;
     ll ret = 0;
     for(int i = 0; i < d+2; i++){
         ll num = 1;
@@ -33,9 +33,7 @@ ll Sd(int d){
         if(i < d+1) num = (num*suff[i+1])%MOD;
         ll den = (invf[i]*invf[d+1-i])%MOD;
         if((d+1-i)%2) den = MOD-den;
-        ll term = y[i]*num%MOD;
-        term = term*den%MOD;
-        ret = (ret+term)%MOD;
+        ret = (ret+y[i]*num*MOD*den)%MOD;
     }
     return ret;
 }
