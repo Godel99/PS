@@ -2,6 +2,8 @@ import sys
 input = lambda: sys.stdin.readline().rstrip()
 print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args)) + end)
 
+from collections import defaultdict
+
 def main():
     MOD = 998244353
     n, m, k = map(int, input().split())
@@ -9,7 +11,7 @@ def main():
     for _ in range(m):
         _, y = map(int, input().split())
         deg[y] += 1
-    vcnt = [0]*(m+1)
+    vcnt = defaultdict(int)
     maxd = 0
     for i in range(2, n+1):
         if deg[i]: vcnt[deg[i]] += 1
@@ -38,11 +40,10 @@ def main():
             ret = (ret+y[i]*num*den)%MOD
         return ret
     ans = 0
-    for d in range(1, maxd+1):
-        if vcnt[d] == 0: continue
-        invk = pow(pow(k, d, MOD), MOD-2, MOD)
-        evmd = (vcnt[d]*Sd(d)*invk)%MOD
-        ans = (ans+evmd)%MOD
+    invk = pow(k, MOD-2, MOD)
+    for d, cnt in vcnt.items():
+        evmd = (Sd(d)*pow(invk, d, MOD))%MOD
+        ans = (ans+cnt*evmd)%MOD
     print(ans)
     return
 if __name__ == "__main__":
