@@ -52,9 +52,9 @@ int main() {
         if(deg[i]) vcnt[deg[i]]++;
         if(deg[i] > maxd) maxd = deg[i];
     }
-    vector<ll> fact(maxd+3, 1); invf.assign(maxd+3, 1);
-    for(int i = 1; i < maxd+3; i++) fact[i] = (fact[i-1]*i)%MOD;
-    invf[maxd+2] = pw(fact[maxd+2], MOD-2, MOD);
+    ll fact = 1; invf.assign(maxd+3, 1); 
+    for(int i = 1; i < maxd+3; i++) fact = (fact*i)%MOD;
+    invf[maxd+2] = pw(fact, MOD-2, MOD);
     for(int i = maxd+1; i > 0; i--) invf[i] = (invf[i+1]*(i+1))%MOD;
     ll ans = 0;
     ll invk = pw(k, MOD-2, MOD);
