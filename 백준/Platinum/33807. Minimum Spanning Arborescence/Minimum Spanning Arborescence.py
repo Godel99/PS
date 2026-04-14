@@ -20,15 +20,17 @@ def main():
     invf[maxd+2] = pow(fact[maxd+2], MOD-2, MOD)
     for i in range(maxd+1, -1, -1): invf[i] = (invf[i+1]*(i+1))
     def Sd(d):
+        ret = 0
         y = [0]*(d+2)
         for i in range(1, d+2): y[i] = (y[i-1]+pow(i, d, MOD))%MOD
+        if k <= d+1: return y[k]
         pref = [1]*(d+2)
         suff = [1]*(d+2)
         pref[0] = k
         for i in range(1, d+2): pref[i] = (pref[i-1]*(k-i))%MOD
         suff[d+1] = (k-d-1)
         for i in range(d, -1, -1): suff[i] = (suff[i+1]*(k-i))%MOD
-        ret = 0
+        
         for i in range(d+2):
             num = 1
             if i > 0: num = (num*pref[i-1])%MOD
