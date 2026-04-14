@@ -9,10 +9,10 @@ def main():
     for _ in range(m):
         _, y = map(int, input().split())
         deg[y] += 1
-    vcnt = {}
+    vcnt = [0]*(m+1)
     maxd = 0
     for i in range(2, n+1):
-        if deg[i]: vcnt[deg[i]] = vcnt.get(deg[i], 0) + 1
+        if deg[i]: vcnt[deg[i]] += 1
         if deg[i] > maxd: maxd = deg[i]
     fact = [1]*(maxd+3)
     invf = [1]*(maxd+3)
@@ -35,13 +35,16 @@ def main():
             if i < d+1: num = (num*suff[i+1])%MOD
             den = (invf[i]*invf[d+1-i])%MOD
             if (d+1-i)%2: den = MOD-den
-            ret = (ret+y[i]*num*den)%MOD
+            tmp = (y[i]*num)%MOD
+            tmp = (tmp*den)%MOD
+            ret = (ret+tmp)%MOD
         return ret
     ans = 0
     invk = pow(k, MOD-2, MOD)
-    for d, cnt in vcnt.items():
+    for d in range(1, maxd+1):
+        if vcnt[d] == 0: continue
         evmd = (Sd(d)*pow(invk, d, MOD))%MOD
-        ans = (ans+cnt*evmd)%MOD
+        ans = (ans+vcnt[d]*evmd)%MOD
     print(ans)
     return
 if __name__ == "__main__":
