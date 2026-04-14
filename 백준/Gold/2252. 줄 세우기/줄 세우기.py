@@ -15,14 +15,12 @@ def main():
     dq = deque()
     for i in range(1, n+1):
         if deg[i] == 0: dq.append(i)
-    ans = []
     while dq:
         cur = dq.popleft()
-        ans.append(cur)
+        print(cur, end=' ')
         for nxt in e[cur]:
             deg[nxt] -= 1
             if deg[nxt] == 0: dq.append(nxt)
-    print(*ans)
     return
 if __name__ == "__main__":
     main()
