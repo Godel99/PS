@@ -51,7 +51,7 @@ int main() {
     pref[0] = k;
     for(int i = 1; i <= limit; i++) pref[i] = (pref[i-1]*(k-i))%MOD;
     suff[limit] = pw(pref[limit], MOD-2, MOD);
-    for(int i = limit-1; i >= 0; i--) suff[i] = (suff[i+1]*(k-i-i))%MOD;
+    for(int i = limit-1; i >= 0; i--) suff[i] = (suff[i+1]*(k-i-1))%MOD;
     invki.assign(limit+1, 0);
     invki[0] = suff[0];
     for(int i = 1; i <= limit; i++) invki[i] = (pref[i-1]*suff[i])%MOD;
