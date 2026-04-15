@@ -19,17 +19,21 @@ int main(){
     cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
     int n, m; cin >> n >> m;
     if(n > m) swap(n, m);
-    bool isp[n+1]; memset(isp, 1, sizeof(isp));
-    isp[0] = isp[1] = 0;
-    vector<int> primes; primes.reserve(1000000);
-    for(int i = 2; i <= n; i++){
-        if(isp[i]) primes.push_back(i);
-        for(auto p : primes){
-            if(i*p > n) break;
-            isp[i*p] = 0;
-            if(i%p == 0) break;
+    int size = n/3+1;
+    vector<bool> isp(size, 1);
+    isp[0] = 0;
+    for(int i = 1; i*i <= size; i++){
+        if(isp[i]){
+            int p = 3*i+1|1;
+            int d = p*2;
+            int s = p*p;
+            int j = p*(p+4-2*(i&1));
+            for(int k = s/3; k < size; k += d) isp[k] = 0;
+            for(int k = j/3; k < size; k += d) isp[k] = 0;
         }
     }
+    vector<int> primes = {2, 3};
+    for(int i = 1; i < size; i++) if(isp[i]) primes.push_back(3*i+1|1);
     ll ans = 1;
     for(auto p : primes){
         ll pi = p, ex = 0;
