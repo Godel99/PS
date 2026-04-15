@@ -7,15 +7,17 @@ MOD = 1_000_000_007
 def main():
     n, m = map(int, input().split())
     if n > m: n, m = m, n
-    isp = bytearray([1])*(n+1)
-    isp[0] = isp[1] = 0
-    primes = []
-    for i in range(2, n+1):
-        if isp[i]: primes.append(i)
-        for p in primes:
-            if i*p > n: break
-            isp[i*p] = 0
-            if i%p == 0: break
+    size = n//3+1
+    isp = bytearray([1])*size
+    isp[0] = 0
+    limit = int(n**0.5)
+    for i in range(1, limit//3+1):
+        if isp[i]:
+            p = 3*i+1|1
+            d, s, j = p*2, p*p, p*(p+4-2*(i&1))
+            isp[s//3::d] = bytearray([0])*((size-1-s//3)//d+1)
+            isp[j//3::d] = bytearray([0])*((size-1-j//3)//d+1)
+    primes = [2, 3]+[3*i+1|1 for i in range(1, size) if isp[i]]
     ans = 1
     for p in primes:
         pi, ex = p, 0
