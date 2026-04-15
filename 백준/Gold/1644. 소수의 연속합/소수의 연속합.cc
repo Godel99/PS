@@ -8,7 +8,7 @@ int main() {
     if(n == 1) return !(cout << 0);
     if(n < 5) return !(cout << (n == 2 || n == 3 ? 1 : 0));
     int size = n/3+1;
-    vector<bool> isp(size, 1);
+    bool isp[size]; memset(isp, 1, sizeof(isp));
     isp[0] = 0;
     for(int i = 1; i*i <= n; i++){
         if(isp[i]){
