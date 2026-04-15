@@ -8,9 +8,9 @@ int main() {
     if(n == 1) return !(cout << 0);
     if(n < 5) return !(cout << (n == 2 || n == 3 ? 1 : 0));
     int size = n/3+1;
-    bool isp[size]; memset(isp, 1, sizeof(isp));
+    vector<bool> isp(size, 1);
     isp[0] = 0;
-    for(int i = 1; i*i <= n; i++){
+    for(int i = 1; i*i <= size; i++){
         if(isp[i]){
             int p = 3*i+1|1;
             int d = p*2;
