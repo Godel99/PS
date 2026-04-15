@@ -22,7 +22,7 @@ int main(){
     int size = n/3+1;
     vector<bool> isp(size, 1);
     isp[0] = 0;
-    for(int i = 1; i*i <= size; i++){
+    for(int i = 1; i*i <= size/3; i++){
         if(isp[i]){
             int p = 3*i+1|1;
             int d = p*2;
