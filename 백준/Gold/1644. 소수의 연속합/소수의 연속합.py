@@ -5,12 +5,18 @@ print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args
 def main():
     n = int(input())
     if n == 1: print(0); return
-    isp = bytearray([1])*(n+1)
-    isp[0] = isp[1] = 0
-    isp[4::2] = bytearray([0]) * len(range(4, n+1, 2))
-    for i in range(3, int((n+1)**0.5)+1, 2):
-        if isp[i]: isp[i*i:(n+1):i*2] = bytearray([0])*len(range(i*i, (n+1), i*2))
-    primes = [i for i, v in enumerate(isp) if v]
+    if n < 5: print(1 if n in {2, 3} else 0); return
+    size = n//3+1
+    isp = bytearray([1])*size
+    isp[0] = 0
+    limit = int(n**0.5)
+    for i in range(1, limit//3+1):
+        if isp[i]:
+            p = 3*i+1|1
+            d, s, j = p*2, p*p, p*(p+4-2*(i&1))
+            isp[s//3::d] = bytearray([0])*((size-1-s//3)//d+1)
+            isp[j//3::d] = bytearray([0])*((size-1-j//3)//d+1)
+    primes = [2, 3]+[3*i+1|1 for i in range(1, size) if isp[i]]
     ans = sp = l = 0
     for rp in primes:
         sp += rp
