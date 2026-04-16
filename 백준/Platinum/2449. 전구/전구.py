@@ -12,8 +12,7 @@ def main():
     dp = [[0]*(m) for _ in range(m)]
     for d in range(1, m):
         for l in range(m-d):
-            r = l+d
-            mind = d
+            r, mind = l+d, d
             for mid in range(l, r):
                 mind = min(mind, dp[l][mid]+dp[mid+1][r]+(a[l] != a[mid+1]))
             dp[l][r] = mind
