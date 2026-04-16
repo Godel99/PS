@@ -1,56 +1,63 @@
 import sys
 
 def solve():
-    MOD = 1_000_000_007
-    data = sys.stdin.buffer.read().split()
-    N = int(data[0])
-    H = list(map(int, data[1:N+1]))
-
-    left_child = [-1] * N
-    right_child = [-1] * N
-    parent = [-1] * N
-
-    # 최대 힙 카르테시안 트리 구성 (스택 이용)
-    stack = []
+    # 1. Fast I/O: 전체 입력을 한 번에 읽어와서 공백 기준으로 분리
+    input_data = sys.stdin.read().split()
+    if not input_data:
+        return
+    
+    N = int(input_data[0])
+    h = [int(x) for x in input_data[1:]]
+    MOD = 1000000007
+    
+    # 2. 동적 할당(append/pop) 오버헤드를 없애기 위한 크기 고정 배열과 포인터
+    C = [1] * N
+    S = [0] * N
+    sp = 0
+    
+    ret = 0
+    
+    # 3. 핵심 로직 (지역 변수 환경에서 실행되어 조회 속도가 극대화됨)
     for i in range(N):
-        last_popped = -1
-        while stack and H[stack[-1]] < H[i]:
-            last_popped = stack.pop()
-        if last_popped != -1:
-            left_child[i] = last_popped
-            parent[last_popped] = i
-        if stack:
-            right_child[stack[-1]] = i
-            parent[i] = stack[-1]
-        stack.append(i)
+        hi = h[i]
+        
+        while sp > 0 and h[S[sp - 1]] <= hi:
+            sp -= 1
+            j = S[sp]
+            
+            # 왼쪽 벽과 오른쪽 벽 중 더 낮은 벽(k)을 찾음
+            if sp > 0 and h[S[sp - 1]] < hi:
+                k = S[sp - 1]
+            else:
+                k = i
+                
+            diff = h[k] - h[j]
+            # 비용 계산: 파이썬은 정수 오버플로우가 없지만, 
+            # 숫자가 너무 커지면 연산 속도가 미세하게 느려지므로 적절히 MOD 처리
+            ways = (N - C[j]) * C[j] % MOD
+            cost = diff * diff % MOD
+            
+            ret = (ret + ways * cost) % MOD
+            C[k] += C[j]
+            
+        S[sp] = i
+        sp += 1
+        
+    # 4. 스택에 남은 원소들 (오른쪽 벽을 찾지 못한 건물들) 처리
+    while sp > 1:
+        i_idx = S[sp - 1]
+        j_idx = S[sp - 2]
+        
+        diff = h[j_idx] - h[i_idx]
+        ways = (N - C[i_idx]) * C[i_idx] % MOD
+        cost = diff * diff % MOD
+        
+        ret = (ret + ways * cost) % MOD
+        C[j_idx] += C[i_idx]
+        sp -= 1
+        
+    print(ret)
 
-    root = stack[0]
-
-    # 서브트리 크기 계산 (후위 순회)
-    subtree_size = [1] * N
-    stk = [(root, False)]
-    while stk:
-        node, done = stk.pop()
-        if done:
-            if parent[node] != -1:
-                subtree_size[parent[node]] += subtree_size[node]
-        else:
-            stk.append((node, True))
-            if right_child[node] != -1:
-                stk.append((right_child[node], False))
-            if left_child[node] != -1:
-                stk.append((left_child[node], False))
-
-    # 각 간선의 기여도 합산
-    ans = 0
-    for i in range(N):
-        if parent[i] != -1:
-            p = parent[i]
-            diff = H[p] - H[i]
-            cost = (diff * diff) % MOD
-            s = subtree_size[i]
-            ans = (ans + cost * s % MOD * (N - s)) % MOD
-
-    print(ans)
-
-solve()
+# 함수 호출로 실행 (전역 공간 실행보다 바이트코드 최적화가 잘 됨)
+if __name__ == '__main__':
+    solve()
