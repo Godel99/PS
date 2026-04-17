@@ -13,17 +13,16 @@ def main():
         if start == end: return 1
         if abs(start-end) == 2: return 4
         return 3
-    dp = [[inf]*5 for _ in range(5)]
-    dp[0][0] = 0
-    for c in cmd:
-        ndp = [[inf]*5 for _ in range(5)]
-        for l in range(5):
-            for r in range(5):
-                if dp[l][r] == inf: continue
-                if c != r: ndp[c][r] = min(ndp[c][r], dp[l][r]+cst(l, c))
-                if c != l: ndp[l][c] = min(ndp[l][c], dp[l][r]+cst(r, c))
-        dp = ndp
-    print(min(map(min, dp)))
+    dp = [inf]*5; dp[0] = 0
+    pre = 0
+    for cur in cmd:
+        minv = inf
+        for i in range(5):
+            minv = min(minv, dp[i]+cst(i, cur))
+            dp[i] += cst(pre, cur)
+        dp[pre] = minv
+        pre = cur
+    print(min(dp))
     return
 if __name__ == "__main__":
     main()
