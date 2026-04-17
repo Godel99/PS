@@ -8,10 +8,10 @@ int main() {
     cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
     int n; cin >> n;
     vector<int> h(n), ch(n, 1);
-    for(int i = 0; i < n; i++) cin >> h[i];
     stack<int> st;
     ll ans = 0;
     for(int r = 0; r < n; r++){
+        cin >> h[r];
         while(st.size() && h[st.top()] <= h[r]){
             int l = st.top(); st.pop();
             int m = (st.size() && h[st.top()] < h[r] ? st.top() : r);
