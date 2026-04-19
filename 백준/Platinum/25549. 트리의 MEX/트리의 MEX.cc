@@ -1,40 +1,41 @@
 #include <bits/stdc++.h>
 using namespace std;
-using ll = long long;
-
-int main() {
-    cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
-    int n; cin >> n;
-    vector<int> p(n+1, 0), v(n+1, 0), deg(n+1, 0), ans(n, 0);
-    vector<vector<int>> e(n+1);
-    vector<set<int>> s(n+1);
-    for(int i = 1; i <= n; i++){
-        cin >> p[i];
-        if(p[i] == -1) continue;
-        deg[p[i]]++;
-        e[p[i]].push_back(i);
+#define all(x) x.begin(), x.end()
+#define ll long long
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int n;
+    cin >> n;
+    vector<vector<int>> adj(n);
+    int root;
+    for (int i = 0; i < n; i++) {
+        int p;
+        cin >> p;
+        p--;
+        if (p < 0) root = i;
+        else adj[p].push_back(i);
     }
-    for(int i = 1; i <= n; i++) cin >> v[i];
-    stack<int> st;
-    for(int i = 1; i <= n; i++) if(deg[i] == 0) st.push(i);
-    while(st.size()){
-        int cur = st.top(); st.pop();
-        s[cur].insert(v[cur]);
-        int prv = 0;
-        for(int nxt : e[cur]) prv = max(prv, ans[nxt-1]);
-        for(int nv = prv; nv <= n; nv++) if(s[cur].find(nv) == s[cur].end()){
-            ans[cur-1] = nv;
-            break;
+    vector<int> a(n);
+    for (int &i : a) cin >> i;
+    vector<int> ans(n);
+    function<void(int, int&, set<int>&)> dfs = [&](int u, int& mex, set<int>& s) {
+        s.insert(a[u]);
+        for (int v : adj[u]) {
+            int cmex = 0;
+            set<int> cs;
+            dfs(v, cmex, cs);
+            if (cs.size() > s.size()) swap(cs, s);
+            mex = max(mex, cmex);
+            for (int i : cs) s.insert(i);
         }
-        if(p[cur] == -1) continue;
-        if(s[p[cur]].size() >= s[cur].size()) s[p[cur]].merge(s[cur]);
-        else{ 
-            s[cur].merge(s[p[cur]]);
-            s[p[cur]] = move(s[cur]);
-        }
-        deg[p[cur]]--;
-        if(deg[p[cur]] == 0) st.push(p[cur]);
-    }
-    for(int i = 0; i < n; i++) cout << ans[i] << '\n';
+        while (s.count(mex)) mex++;
+        ans[u] = mex;
+    };  
+    int mex = 0;
+    set<int> s;
+    dfs(root, mex, s);
+    for (int i : ans) cout << i << '\n';
     return 0;
 }
