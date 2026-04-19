@@ -23,6 +23,7 @@ int main() {
             prv = max(prv, ans[nxt-1]);
             if(s[nxt].size() > s[cur].size()) s[cur].swap(s[nxt]);
             for(int nv : s[nxt]) s[cur].insert(nv);
+            s[nxt].clear();
         }
         while(s[cur].count(prv)) prv++;
         ans[cur-1] = prv;
