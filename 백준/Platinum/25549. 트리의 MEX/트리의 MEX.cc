@@ -7,7 +7,7 @@ int main() {
     int n; cin >> n;
     vector<int> p(n+1), v(n+1), ans(n);
     vector<vector<int>> e(n+1);
-    vector<set<int>> s(n+1);
+    vector<unordered_set<int>> s(n+1);
     int root = -1;
     for(int i = 1; i <= n; i++){
         cin >> p[i];
@@ -22,8 +22,7 @@ int main() {
             dfs(nxt);
             prv = max(prv, ans[nxt-1]);
             if(s[nxt].size() > s[cur].size()) s[cur].swap(s[nxt]);
-            s[cur].merge(s[nxt]);
-            s[nxt].clear();
+            for(int nv : s[nxt]) s[cur].insert(nv);
         }
         while(s[cur].count(prv)) prv++;
         ans[cur-1] = prv;
