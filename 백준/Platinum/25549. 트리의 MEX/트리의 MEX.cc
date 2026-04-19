@@ -1,41 +1,34 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define all(x) x.begin(), x.end()
-#define ll long long
-int main()
-{
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    int n;
-    cin >> n;
-    vector<vector<int>> adj(n);
-    int root;
-    for (int i = 0; i < n; i++) {
-        int p;
-        cin >> p;
-        p--;
-        if (p < 0) root = i;
-        else adj[p].push_back(i);
+using ll = long long;
+
+int main() {
+    cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
+    int n; cin >> n;
+    vector<int> p(n+1), v(n+1), ans(n+1);
+    vector<vector<int>> e(n+1);
+    vector<set<int>> s(n+1);
+    int root = -1;
+    for(int i = 1; i <= n; i++){
+        cin >> p[i];
+        if(p[i] == -1) root = i;
+        else e[p[i]].push_back(i);
     }
-    vector<int> a(n);
-    for (int &i : a) cin >> i;
-    vector<int> ans(n);
-    function<void(int, int&, set<int>&)> dfs = [&](int u, int& mex, set<int>& s) {
-        s.insert(a[u]);
-        for (int v : adj[u]) {
-            int cmex = 0;
-            set<int> cs;
-            dfs(v, cmex, cs);
-            if (cs.size() > s.size()) swap(cs, s);
-            mex = max(mex, cmex);
-            for (int i : cs) s.insert(i);
+    for(int i = 1; i <= n; i++) cin >> v[i];
+    function<void(int)> dfs = [&](int cur){
+        s[cur].insert(v[cur]);
+        int prv = 0;
+        for(int nxt : e[cur]){
+            dfs(nxt);
+            prv = max(prv, ans[nxt]);
+            if(s[nxt].size() > s[cur].size()) s[cur].swap(s[nxt]);
+            for(int nv : s[nxt]) s[cur].insert(nv);
+            s[nxt].clear();
         }
-        while (s.count(mex)) mex++;
-        ans[u] = mex;
-    };  
-    int mex = 0;
-    set<int> s;
-    dfs(root, mex, s);
-    for (int i : ans) cout << i << '\n';
+        while(s[cur].count(prv)) prv++;
+        ans[cur] = prv;
+    };
+    dfs(root);
+    for(int i = 1; i <= n; i++) cout << ans[i] << '\n';
     return 0;
 }
