@@ -5,7 +5,7 @@ using ll = long long;
 int main() {
     cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
     int n; cin >> n;
-    vector<int> p(n+1), v(n+1), ans(n+1);
+    vector<int> p(n+1), v(n+1), ans(n);
     vector<vector<int>> e(n+1);
     vector<set<int>> s(n+1);
     int root = -1;
@@ -20,15 +20,15 @@ int main() {
         int prv = 0;
         for(int nxt : e[cur]){
             dfs(nxt);
-            prv = max(prv, ans[nxt]);
+            prv = max(prv, ans[nxt-1]);
             if(s[nxt].size() > s[cur].size()) s[cur].swap(s[nxt]);
-            for(int nv : s[nxt]) s[cur].insert(nv);
+            s[cur].merge(s[nxt]);
             s[nxt].clear();
         }
         while(s[cur].count(prv)) prv++;
-        ans[cur] = prv;
+        ans[cur-1] = prv;
     };
     dfs(root);
-    for(int i = 1; i <= n; i++) cout << ans[i] << '\n';
+    for(int i : ans) cout << i << '\n';
     return 0;
 }
