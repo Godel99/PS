@@ -7,7 +7,7 @@ int main() {
     int n; cin >> n;
     vector<int> p(n+1, 0), v(n+1, 0), deg(n+1, 0), ans(n, 0);
     vector<vector<int>> e(n+1);
-    vector<unordered_set<int>> s(n+1);
+    vector<set<int>> s(n+1);
     for(int i = 1; i <= n; i++){
         cin >> p[i];
         if(p[i] == -1) continue;
