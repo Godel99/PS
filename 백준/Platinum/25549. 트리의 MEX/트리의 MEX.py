@@ -8,22 +8,24 @@ def main():
     n = int(input())
     p = [0]+[*map(int, input().split())]
     e = [[] for _  in range(n+1)]
+    s = [set() for _ in range(n+1)]
     v = [0]+[*map(int, input().split())]
+    root = -1
     for i in range(1, n+1):
         if p[i] == -1: root = i
-        else: e[p[i]].append(i)
+        else:e[p[i]].append(i)
     ans = [0]*n
     def dfs(cur):
-        cs = {v[cur]}
-        cmex = 0
+        s[cur].add(v[cur])
+        prv = 0
         for nxt in e[cur]:
-            nc, nmex = dfs(nxt)
-            if len(nc) > len(cs): cs, nc = nc, cs
-            cs.update(nc)
-            cmex = max(cmex, nmex)
-        while cmex in cs: cmex += 1
-        ans[cur-1] = cmex
-        return cs, cmex
+            dfs(nxt)
+            prv = max(prv, ans[nxt-1])
+            if len(s[nxt]) > len(s[cur]): s[cur], s[nxt] = s[nxt], s[cur]
+            s[cur].update(s[nxt])
+            s[nxt].clear()
+        while prv in s[cur]: prv += 1
+        ans[cur-1] = prv
     dfs(root)
     print('\n'.join(map(str, ans)))
     return
