@@ -1,118 +1,64 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-#include <cmath>
-
+#include <bits/stdc++.h>
 using namespace std;
 
-// 최대공약수 함수 (C++17부터는 std::gcd 사용 가능)
-long long get_gcd(long long a, long long b) {
-    while (b) {
-        a %= b;
-        swap(a, b);
-    }
-    return a;
-}
+const int MAXN  = 150001;
+const int LOG   = 18;    // 2^17 = 131072 < 150000 < 2^18
 
-// 입출력 최적화를 위한 구조체
-struct FastIO {
-    FastIO() {
-        ios_base::sync_with_stdio(false);
-        cin.tie(NULL);
-    }
-} fast_io;
+int  d[17][MAXN + 2];    // 차이 배열
+int  ans[MAXN];          // D[i]
+int  sparse[LOG][MAXN];  // Sparse Table
+int  qx[MAXN], qy[MAXN], qz[MAXN];
 
 int main() {
-    int N, M;
-    if (!(cin >> N >> M)) return 0;
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-    vector<int> xs(M), ys(M), zs(M);
-    for (int i = 0; i < M; ++i) {
-        cin >> xs[i] >> ys[i] >> zs[i];
-        xs[i]--; ys[i]--; // 0-based index 변환
+    int n, m;
+    cin >> n >> m;
+
+    int M = m;
+    for (int i = 0; i < M; i++) {
+        cin >> qx[i] >> qy[i] >> qz[i];
+        d[qz[i]][qx[i]]++;
+        d[qz[i]][qy[i] + 1]--;
     }
 
-    vector<long long> D(N, 1);
-    int primes[] = {2, 3, 5, 7, 11, 13};
-
-    for (int p : primes) {
-        int max_e = 0;
-        int pk = p;
-        while (pk <= 16) {
-            max_e++;
-            if (16 / p < pk) break; // 오버플로우 방지
-            pk *= p;
-        }
-
-        vector<int> vp(M, 0);
-        for (int i = 0; i < M; ++i) {
-            int t = zs[i];
-            while (t % p == 0) {
-                vp[i]++;
-                t /= p;
-            }
-        }
-
-        vector<int> max_exp(N, 0);
-        // 지수 e별로 차분 배열 적용
-        for (int e = 1; e <= max_e; ++e) {
-            vector<int> diff(N + 1, 0);
-            for (int i = 0; i < M; ++i) {
-                if (vp[i] >= e) {
-                    diff[xs[i]]++;
-                    diff[ys[i] + 1]--;
-                }
-            }
-            int cur = 0;
-            for (int i = 0; i < N; ++i) {
-                cur += diff[i];
-                if (cur > 0) max_exp[i] = e;
-            }
-        }
-
-        // 전처리된 지수를 결과 배열 D에 반영
-        for (int i = 0; i < N; ++i) {
-            if (max_exp[i] > 0) {
-                long long multiplier = 1;
-                for (int e = 0; e < max_exp[i]; ++e) multiplier *= p;
-                D[i] *= multiplier;
-            }
+    // ── 1단계: D[i] 계산 (유저 방식: z=1~16 직접 LCM) ────────────
+    fill(ans, ans + n, 1);
+    for (int z = 1; z <= 16; z++) {
+        int cnt = 0;
+        for (int i = 1; i <= n; i++) {
+            cnt += d[z][i];
+            if (cnt) ans[i - 1] = lcm(ans[i - 1], z);
         }
     }
 
-    // Sparse Table 구성 (Sparse Table은 전역이나 큰 배열로 선언하는 게 좋음)
-    int LOG = 32 - __builtin_clz(N); // log2(N) 계산
-    vector<vector<long long>> table(LOG, vector<long long>(N));
+    // ── 2단계: Sparse Table 구성 (O(N log N)) ─────────────────────
+    for (int i = 0; i < n; i++) sparse[0][i] = ans[i];
 
-    for (int i = 0; i < N; ++i) table[0][i] = D[i];
-
-    for (int j = 1; j < LOG; ++j) {
-        int shift = 1 << (j - 1);
-        for (int i = 0; i + (1 << j) <= N; ++i) {
-            table[j][i] = get_gcd(table[j - 1][i], table[j - 1][i + shift]);
-        }
+    for (int j = 1; j < LOG; j++) {
+        int half = 1 << (j - 1);
+        for (int i = 0; i + half < n; i++)
+            sparse[j][i] = __gcd(sparse[j-1][i], sparse[j-1][i + half]);
+        // 범위 초과 구간은 이전 레벨 값 복사 (쿼리 분기 제거용)
+        for (int i = max(0, n - half); i < n; i++)
+            sparse[j][i] = sparse[j-1][i];
     }
 
-    // 구간 GCD 쿼리 함수 (람다)
-    auto range_gcd = [&](int l, int r) {
-        int len = r - l + 1;
-        int k = 31 - __builtin_clz(len);
-        return get_gcd(table[k][l], table[k][r - (1 << k) + 1]);
-    };
-
-    // 모든 조건 검증
-    for (int i = 0; i < M; ++i) {
-        if (range_gcd(xs[i], ys[i]) != zs[i]) {
-            cout << "Impossible" << "\n";
+    // ── 3단계: 조건 검증 (Sparse Table O(1) 쿼리) ─────────────────
+    for (int i = 0; i < M; i++) {
+        int l = qx[i] - 1, r = qy[i] - 1;
+        int k = __lg(r - l + 1);
+        int res = __gcd(sparse[k][l], sparse[k][r - (1 << k) + 1]);
+        if (res != qz[i]) {
+            cout << "Impossible\n";
             return 0;
         }
     }
 
-    // 결과 출력
-    for (int i = 0; i < N; ++i) {
-        cout << D[i] << (i == N - 1 ? "" : " ");
-    }
-    cout << "\n";
+    // ── 4단계: 출력 ───────────────────────────────────────────────
+    for (int i = 0; i < n; i++)
+        cout << ans[i] << " \n"[i == n - 1];
 
     return 0;
 }
