@@ -9,20 +9,19 @@ int main(){
         int n; cin >> n;
         vector<int> s(n+1, 0);
         for(int i = 1; i <= n; i++) cin >> s[i];
-        int cnt = 0;
-        vector<bool> vis(n+1, 0), fin(n+1, 0);
-        function<void(int)> dfs = [&](int cur){
-            vis[cur] = 1;
+        vector<int> deg(n+1, 0);
+        for(int i = 1; i <= n; i++) deg[s[i]]++;
+        stack<int> st;
+        for(int i = 1; i <= n; i++) if(deg[i] == 0) st.push(i);
+        int ans = 0;
+        while(st.size()){
+            int cur = st.top(); st.pop();
+            ans++;
             int nxt = s[cur];
-            if(!vis[nxt]) dfs(nxt);
-            else if(!fin[nxt]){
-                for(int i = nxt; i != cur; i = s[i]) cnt++;
-                cnt++;
-            }
-            fin[cur] = 1;
-        };
-        for(int i = 1; i <= n; i++) if(!vis[i]) dfs(i);
-        cout << n - cnt << '\n';
+            deg[nxt]--;
+            if(deg[nxt] == 0) st.push(nxt);
+        }
+        cout << ans << '\n';
     }
     return 0;
 }
