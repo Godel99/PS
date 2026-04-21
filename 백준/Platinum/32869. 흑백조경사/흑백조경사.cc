@@ -9,68 +9,74 @@ int N;
 int C[MAXN];
 vector<int> adj[MAXN];
 
-int sub_w[MAXN], sub_b[MAXN];
-int W_total = 0, B_total = 0;
-int bad_count[MAXN];
+int w[MAXN], b[MAXN]; // 서브트리 내 흰색, 검은색 정점 수
+bool is_even[MAXN];    // 해당 정점을 루트로 하는 서브트리가 Even한지 여부
+int ecnt[MAXN];       // 자식들 중 is_even이 false인 자식의 수
+int tot_w, tot_b;
+vector<int> ans;
 
-// 자손들의 색상 분포와 현재 노드의 색상을 비교하여 Even 조건을 만족하는지 확인
-bool check_valid(int w_desc, int b_desc, int color) {
-    if (w_desc > b_desc && color != 0) return false;
-    if (b_desc > w_desc && color != 1) return false;
+// 현재 노드가 자손들의 색상 다수결 조건을 만족하는지 판별
+// sub_w, sub_b는 현재 노드를 포함한 서브트리의 색상 수
+bool check_self(int color, int sub_w, int sub_b) {
+    int desc_w = sub_w - (color == 0 ? 1 : 0);
+    int desc_b = sub_b - (color == 1 ? 1 : 0);
+    if (desc_w > desc_b && color != 0) return false;
+    if (desc_b > desc_w && color != 1) return false;
     return true;
 }
 
-// 부모 u에서 자식 v로 가는 방향일 때, v가 Even 조건을 만족하는지 확인
-bool valid_edge(int w_comp, int b_comp, int c_v) {
-    int w_desc = w_comp - (c_v == 0 ? 1 : 0);
-    int b_desc = b_comp - (c_v == 1 ? 1 : 0);
-    return check_valid(w_desc, b_desc, c_v);
-}
+// 1단계: 1번 노드를 루트로 하여 기본적인 트리 정보 수집
+void dfs_init(int u, int p) {
+    is_even[u] = true;
+    w[u] = (C[u] == 0 ? 1 : 0);
+    b[u] = (C[u] == 1 ? 1 : 0);
+    ecnt[u] = 0;
 
-// DFS 1: 각 서브트리의 흰색/검은색 노드 개수를 센다.
-void dfs1(int u, int p) {
-    sub_w[u] = (C[u] == 0 ? 1 : 0);
-    sub_b[u] = (C[u] == 1 ? 1 : 0);
     for (int v : adj[u]) {
         if (v == p) continue;
-        dfs1(v, u);
-        sub_w[u] += sub_w[v];
-        sub_b[u] += sub_b[v];
+        dfs_init(v, u);
+        w[u] += w[v];
+        b[u] += b[v];
+        
+        if (!is_even[v]) {
+            is_even[u] = false;
+            ecnt[u]++;
+        }
     }
+    // 자식 서브트리가 모두 Even해도, 자기 자신이 다수결을 어기면 Even하지 않음
+    if (!check_self(C[u], w[u], b[u])) is_even[u] = false;
 }
 
-// DFS 2: 1번 노드를 루트로 했을 때의 위반 간선(bad_count) 초기값을 구한다.
-void dfs2(int u, int p) {
-    for (int v : adj[u]) {
-        if (v == p) continue;
-        if (!valid_edge(sub_w[v], sub_b[v], C[v])) {
-            bad_count[1]++;
-        }
-        dfs2(v, u);
+// 2단계: 리루팅 탐색 및 가지치기
+void solve(int u, int p) {
+    // 현재 u를 루트로 했을 때 전체 나무가 Even한지 확인
+    // 1. 자식들 중 Even하지 않은 것이 없어야 함 (ecnt[u] == 0)
+    // 2. 루트 정점 스스로가 전체 다수결 조건을 만족해야 함
+    if (ecnt[u] == 0 && check_self(C[u], tot_w, tot_b)) {
+        ans.push_back(u);
     }
-}
 
-// DFS 3: Re-rooting 기법을 통해 모든 노드에 대한 bad_count를 O(1)에 갱신한다.
-void dfs3(int u, int p) {
+    // [최적화 핵심: 가지치기]
+    // Even하지 않은 자식이 2개 이상이라면, 어느 쪽으로 루트를 옮겨도 
+    // 반대편에 Even하지 않은 서브트리가 남게 되므로 답이 될 수 없음.
+    if (ecnt[u] >= 2) return;
+
     for (int v : adj[u]) {
         if (v == p) continue;
-        
-        bad_count[v] = bad_count[u];
-        
-        // 1. 기존의 u -> v 방향 간선이 시야에서 사라짐
-        if (!valid_edge(sub_w[v], sub_b[v], C[v])) {
-            bad_count[v]--;
+
+        // [가지치기 2]
+        // Even하지 않은 자식이 딱 1개 있다면, 그 자식 방향으로만 가야 답의 가능성이 있음.
+        if (ecnt[u] == 1 && is_even[v]) continue;
+
+        // 루트를 v로 옮기기 위해 u(부모였던 쪽)가 Even한지 판별
+        int up_w = tot_w - w[v];
+        int up_b = tot_b - b[v];
+        // u의 새로운 '자식'들이 모두 Even하고(ecnt[u]에서 v 제외), u 스스로 만족하는지
+        int v_idx_bad = is_even[v] ? 0 : 1;
+        if (ecnt[u] - v_idx_bad == 0 && check_self(C[u], up_w, up_b)) {
+            // 이 조건이 맞아야 v 방향의 ecnt를 갱신하고 내려갈 수 있음
+            solve(v, u);
         }
-        
-        // 2. 새로운 v -> u 방향 간선이 시야에 들어옴
-        // v가 루트일 때 u가 포함된 컴포넌트의 색상 수 계산
-        int w_vu = W_total - sub_w[v];
-        int b_vu = B_total - sub_b[v];
-        if (!valid_edge(w_vu, b_vu, C[u])) {
-            bad_count[v]++;
-        }
-        
-        dfs3(v, u);
     }
 }
 
@@ -79,43 +85,25 @@ int main() {
     cin.tie(NULL);
 
     if (!(cin >> N)) return 0;
-
+    tot_w = 0; tot_b = 0;
     for (int i = 1; i <= N; ++i) {
         cin >> C[i];
-        if (C[i] == 0) W_total++;
-        else B_total++;
+        if (C[i] == 0) tot_w++;
+        else tot_b++;
     }
-
     for (int i = 0; i < N - 1; ++i) {
-        int u, v;
-        cin >> u >> v;
+        int u, v; cin >> u >> v;
         adj[u].push_back(v);
         adj[v].push_back(u);
     }
 
-    dfs1(1, 0);
-    dfs2(1, 0);
-    dfs3(1, 0);
+    dfs_init(1, 0);
+    solve(1, 0);
 
-    vector<int> ans;
-    for (int i = 1; i <= N; ++i) {
-        // 간선 위반이 없고, 해당 노드 자체도 루트로서 Even 조건을 만족하는지 판별
-        if (bad_count[i] == 0) {
-            int root_w_desc = W_total - (C[i] == 0 ? 1 : 0);
-            int root_b_desc = B_total - (C[i] == 1 ? 1 : 0);
-            if (check_valid(root_w_desc, root_b_desc, C[i])) {
-                ans.push_back(i);
-            }
-        }
-    }
-
-    // 결과 출력
+    sort(ans.begin(), ans.end());
     cout << ans.size() << "\n";
-    if (!ans.empty()) {
-        for (int i = 0; i < ans.size(); ++i) {
-            cout << ans[i] << (i + 1 == ans.size() ? "" : " ");
-        }
-        cout << "\n";
+    for (int i = 0; i < ans.size(); ++i) {
+        cout << ans[i] << (i + 1 == ans.size() ? "" : " ");
     }
 
     return 0;
