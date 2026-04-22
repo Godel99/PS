@@ -44,7 +44,7 @@ def main():
         ans[idx] = p2+1; idx += 1
     maxv = head[mcnt]
     p1 = 0
-    while p1 < vis[p1]: p1 += 1
+    while vis[p1]: p1 += 1
     p2 = p1
     while(idx < n):
         while a[p1] != maxv or vis[p1]: p1 += 1
