@@ -31,27 +31,27 @@ def main():
     p1, p2 = 0, 1
     while p2 < n and a[p2-1] == a[p2]: p2 += 1
     while idx < n and 2*mcnt-1 < size:
-        while p1 < n and (a[p1] == a[p2] or vis[p1]): p1 += 1
+        while a[p1] == a[p2] or vis[p1]: p1 += 1
         vis[p1] = 1
         size -= 1
         Remove(cnt[a[p1]], a[p1])
         ans[idx] = p1+1; idx += 1
         if idx == n or 2*mcnt-1 == size: break
-        while p2 < n and (a[p1] == a[p2] or vis[p2]): p2 += 1
+        while a[p1] == a[p2] or vis[p2]: p2 += 1
         vis[p2] = 1
         size -= 1
         Remove(cnt[a[p2]], a[p2])
         ans[idx] = p2+1; idx += 1
     maxv = head[mcnt]
     p1 = 0
-    while vis[p1]: p1 += 1
+    while p1 < vis[p1]: p1 += 1
     p2 = p1
     while(idx < n):
-        while p1 < n and (a[p1] != maxv or vis[p1]): p1 += 1
+        while a[p1] != maxv or vis[p1]: p1 += 1
         vis[p1] = 1
         ans[idx] = p1+1; idx += 1
         if idx == n: break
-        while p2 < n and (a[p2] == maxv or vis[p2]): p2 += 1
+        while a[p2] == maxv or vis[p2]: p2 += 1
         vis[p2] = 1
         ans[idx] = p2+1; idx += 1
     print(*ans)
