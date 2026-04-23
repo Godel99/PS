@@ -1,31 +1,34 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
 typedef long long ll;
 const int MOD = 998244353;
+const int G = 3;
+const int IMG = 911660635; // MOD에 대한 sqrt(-1)
 
 // 모듈러 거듭제곱
-ll pw(ll a, ll b) {
-    ll ret = 1;
+ll power(ll a, ll b) {
+    ll res = 1;
     a %= MOD;
-    while (b) {
-        if (b & 1) ret = ret * a % MOD;
+    while (b > 0) {
+        if (b & 1) res = res * a % MOD;
         a = a * a % MOD;
         b >>= 1;
     }
-    return ret;
+    return res;
 }
 
 // 모듈러 역원
-ll inv(ll a) {
-    return pw(a, MOD - 2);
+ll inv(ll n) {
+    return power(n, MOD - 2);
 }
 
-// NTT 클래스 구현
-struct NTT {
+// NTT 구현 클래스
+struct FastNTT {
     void ntt(vector<int>& a, bool invert) {
         int n = a.size();
         for (int i = 1, j = 0; i < n; i++) {
@@ -35,14 +38,14 @@ struct NTT {
             if (i < j) swap(a[i], a[j]);
         }
         for (int len = 2; len <= n; len <<= 1) {
-            ll wlen = pw(3, (MOD - 1) / len);
+            ll wlen = power(G, (MOD - 1) / len);
             if (invert) wlen = inv(wlen);
             for (int i = 0; i < n; i += len) {
                 ll w = 1;
                 for (int j = 0; j < len / 2; j++) {
                     int u = a[i + j], v = (int)(1LL * a[i + j + len / 2] * w % MOD);
-                    a[i + j] = (u + v) % MOD;
-                    a[i + j + len / 2] = (u - v + MOD) % MOD;
+                    a[i + j] = (u + v >= MOD) ? (u + v - MOD) : (u + v);
+                    a[i + j + len / 2] = (u - v < 0) ? (u - v + MOD) : (u - v);
                     w = w * wlen % MOD;
                 }
             }
@@ -53,62 +56,34 @@ struct NTT {
         }
     }
 
-    vector<int> conv(const vector<int>& a, const vector<int>& b) {
-        vector<int> fa(a.begin(), a.end()), fb(b.begin(), b.end());
-        int n = 1;
-        while (n < (int)(a.size() + b.size())) n <<= 1;
-        fa.resize(n); fb.resize(n);
-        ntt(fa, false); ntt(fb, false);
-        for (int i = 0; i < n; i++) fa[i] = (int)(1LL * fa[i] * fb[i] % MOD);
-        ntt(fa, true);
-        return fa;
+    vector<int> multiply(vector<int> a, vector<int> b) {
+        int n = 1, target = a.size() + b.size() - 1;
+        while (n < target) n <<= 1;
+        a.resize(n); b.resize(n);
+        ntt(a, false); ntt(b, false);
+        for (int i = 0; i < n; i++) a[i] = (int)(1LL * a[i] * b[i] % MOD);
+        ntt(a, true);
+        a.resize(target);
+        return a;
     }
-} ntt_solver;
+} ntt;
 
-// 복소 다항식 구조체 (사용자 제공 로직 기반)
-struct CPoly {
-    vector<int> rea, ima;
-    CPoly() {}
-    CPoly(int n) {
-        rea.assign(n, 0);
-        ima.assign(n, 0);
-    }
-    size_t size() const { return rea.size(); }
-
-    CPoly operator*(const CPoly &o) const {
-        int final_sz = (int)(size() + o.size() - 1);
-        auto S1 = ntt_solver.conv(rea, o.rea);
-        auto S2 = ntt_solver.conv(ima, o.ima);
-        
-        vector<int> A(size()), B(o.size());
-        for (int i = 0; i < (int)size(); i++) A[i] = (rea[i] + ima[i]) % MOD;
-        for (int i = 0; i < (int)o.size(); i++) B[i] = (o.rea[i] + o.ima[i]) % MOD;
-        
-        auto S3 = ntt_solver.conv(A, B);
-        
-        CPoly C(final_sz);
-        for (int i = 0; i < final_sz; i++) {
-            C.rea[i] = (1LL * S1[i] - S2[i] + MOD) % MOD;
-            C.ima[i] = (1LL * S3[i] - S1[i] - S2[i] + 2LL * MOD) % MOD;
-        }
-        return C;
+// 다항식 크기 비교를 위한 구조체 (Priority Queue용)
+struct Poly {
+    vector<int> p;
+    bool operator>(const Poly& other) const {
+        return p.size() > other.p.size();
     }
 };
 
-CPoly make(int a, int b) {
-    CPoly P(2);
-    P.rea[0] = (MOD - a % MOD) % MOD;
-    P.ima[0] = (MOD - b % MOD) % MOD;
-    P.rea[1] = 1;
-    P.ima[1] = 0;
-    return P;
-}
-
-// 분할 정복을 통한 다항식 곱셈
-CPoly solve_poly(int l, int r, const vector<pair<int, int>>& points) {
-    if (l == r) return make(points[l].first, points[l].second);
-    int mid = (l + r) / 2;
-    return solve_poly(l, mid, points) * solve_poly(mid + 1, r, points);
+// 다항식 뭉치를 하나로 합치는 함수 (분할 정복 최적화)
+vector<int> merge_polys(priority_queue<Poly, vector<Poly>, greater<Poly>>& pq) {
+    while (pq.size() > 1) {
+        vector<int> a = pq.top().p; pq.pop();
+        vector<int> b = pq.top().p; pq.pop();
+        pq.push({ntt.multiply(a, b)});
+    }
+    return pq.top().p;
 }
 
 int main() {
@@ -119,31 +94,42 @@ int main() {
     ll R;
     if (!(cin >> N >> R)) return 0;
 
-    vector<pair<int, int>> points(N);
+    priority_queue<Poly, vector<Poly>, greater<Poly>> pq1, pq2;
+
     for (int i = 0; i < N; i++) {
-        int x, y;
+        ll x, y;
         cin >> x >> y;
-        points[i] = { (x % MOD + MOD) % MOD, (y % MOD + MOD) % MOD };
+        x = (x % MOD + MOD) % MOD;
+        y = (y % MOD + MOD) % MOD;
+
+        // Modular I를 이용한 복소수 근 설정
+        // P1: (z - (x + iy)), P2: (z - (x - iy))
+        int root1 = (int)((x + y * IMG) % MOD);
+        int root2 = (int)((x - (y * IMG % MOD) + MOD) % MOD);
+
+        pq1.push({{(int)((MOD - root1) % MOD), 1}});
+        pq2.push({{(int)((MOD - root2) % MOD), 1}});
     }
 
-    // 모든 (z - Z_j) 곱하기
-    CPoly Q = solve_poly(0, N - 1, points);
+    // 각각의 다항식 곱 전개
+    vector<int> ans1 = merge_polys(pq1);
+    vector<int> ans2 = merge_polys(pq2);
 
-    ll ans = 0;
+    ll total_expected_value = 0;
     ll R2 = (R % MOD) * (R % MOD) % MOD;
     ll current_R2k = 1;
 
-    // 기댓값 E = sum |c_k|^2 * R^(2k) / (k + 1)
     for (int k = 0; k <= N; k++) {
-        ll mag_sq = (1LL * Q.rea[k] * Q.rea[k] + 1LL * Q.ima[k] * Q.ima[k]) % MOD;
-        ll term = mag_sq * current_R2k % MOD;
-        term = term * inv(k + 1) % MOD;
-        
-        ans = (ans + term) % MOD;
-        current_R2k = current_R2k * R2 % MOD;
+        // |c_k|^2 = c_k * conj(c_k) ≡ ans1[k] * ans2[k] (mod MOD)
+        ll mag_sq = (1LL * ans1[k] * ans2[k]) % MOD;
+        ll term = (mag_sq * current_R2k) % MOD;
+        term = (term * inv(k + 1)) % MOD;
+
+        total_expected_value = (total_expected_value + term) % MOD;
+        current_R2k = (current_R2k * R2) % MOD;
     }
 
-    cout << ans << endl;
+    cout << total_expected_value << endl;
 
     return 0;
 }
