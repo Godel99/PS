@@ -1,126 +1,149 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
 using namespace std;
 
-const long long MOD = 998244353;
-const long long PRIM_ROOT = 3;
+typedef long long ll;
+const int MOD = 998244353;
 
-long long power(long long a, long long b) {
-    a %= MOD; if (a < 0) a += MOD;
-    long long res = 1;
-    while (b > 0) {
-        if (b & 1) res = res * a % MOD;
+// 모듈러 거듭제곱
+ll pw(ll a, ll b) {
+    ll ret = 1;
+    a %= MOD;
+    while (b) {
+        if (b & 1) ret = ret * a % MOD;
         a = a * a % MOD;
         b >>= 1;
     }
-    return res;
+    return ret;
 }
 
-void ntt(vector<long long>& a, bool inv) {
-    int n = a.size();
-    for (int i = 1, j = 0; i < n; i++) {
-        int bit = n >> 1;
-        for (; j & bit; bit >>= 1) j ^= bit;
-        j ^= bit;
-        if (i < j) swap(a[i], a[j]);
-    }
-    for (int len = 2; len <= n; len <<= 1) {
-        long long w = power(PRIM_ROOT, (MOD - 1) / len);
-        if (inv) w = power(w, MOD - 2);
-        for (int i = 0; i < n; i += len) {
-            long long wn = 1;
-            for (int j = 0; j < len / 2; j++) {
-                long long u = a[i + j], v = a[i + j + len / 2] * wn % MOD;
-                a[i + j] = (u + v) % MOD;
-                a[i + j + len / 2] = (u - v + MOD) % MOD;
-                wn = wn * w % MOD;
+// 모듈러 역원
+ll inv(ll a) {
+    return pw(a, MOD - 2);
+}
+
+// NTT 클래스 구현
+struct NTT {
+    void ntt(vector<int>& a, bool invert) {
+        int n = a.size();
+        for (int i = 1, j = 0; i < n; i++) {
+            int bit = n >> 1;
+            for (; j & bit; bit >>= 1) j ^= bit;
+            j ^= bit;
+            if (i < j) swap(a[i], a[j]);
+        }
+        for (int len = 2; len <= n; len <<= 1) {
+            ll wlen = pw(3, (MOD - 1) / len);
+            if (invert) wlen = inv(wlen);
+            for (int i = 0; i < n; i += len) {
+                ll w = 1;
+                for (int j = 0; j < len / 2; j++) {
+                    int u = a[i + j], v = (int)(1LL * a[i + j + len / 2] * w % MOD);
+                    a[i + j] = (u + v) % MOD;
+                    a[i + j + len / 2] = (u - v + MOD) % MOD;
+                    w = w * wlen % MOD;
+                }
             }
         }
+        if (invert) {
+            ll n_inv = inv(n);
+            for (int& x : a) x = (int)(1LL * x * n_inv % MOD);
+        }
     }
-    if (inv) {
-        long long ni = power(n, MOD - 2);
-        for (auto& x : a) x = x * ni % MOD;
+
+    vector<int> conv(const vector<int>& a, const vector<int>& b) {
+        vector<int> fa(a.begin(), a.end()), fb(b.begin(), b.end());
+        int n = 1;
+        while (n < (int)(a.size() + b.size())) n <<= 1;
+        fa.resize(n); fb.resize(n);
+        ntt(fa, false); ntt(fb, false);
+        for (int i = 0; i < n; i++) fa[i] = (int)(1LL * fa[i] * fb[i] % MOD);
+        ntt(fa, true);
+        return fa;
     }
+} ntt_solver;
+
+// 복소 다항식 구조체 (사용자 제공 로직 기반)
+struct CPoly {
+    vector<int> rea, ima;
+    CPoly() {}
+    CPoly(int n) {
+        rea.assign(n, 0);
+        ima.assign(n, 0);
+    }
+    size_t size() const { return rea.size(); }
+
+    CPoly operator*(const CPoly &o) const {
+        int final_sz = (int)(size() + o.size() - 1);
+        auto S1 = ntt_solver.conv(rea, o.rea);
+        auto S2 = ntt_solver.conv(ima, o.ima);
+        
+        vector<int> A(size()), B(o.size());
+        for (int i = 0; i < (int)size(); i++) A[i] = (rea[i] + ima[i]) % MOD;
+        for (int i = 0; i < (int)o.size(); i++) B[i] = (o.rea[i] + o.ima[i]) % MOD;
+        
+        auto S3 = ntt_solver.conv(A, B);
+        
+        CPoly C(final_sz);
+        for (int i = 0; i < final_sz; i++) {
+            C.rea[i] = (1LL * S1[i] - S2[i] + MOD) % MOD;
+            C.ima[i] = (1LL * S3[i] - S1[i] - S2[i] + 2LL * MOD) % MOD;
+        }
+        return C;
+    }
+};
+
+CPoly make(int a, int b) {
+    CPoly P(2);
+    P.rea[0] = (MOD - a % MOD) % MOD;
+    P.ima[0] = (MOD - b % MOD) % MOD;
+    P.rea[1] = 1;
+    P.ima[1] = 0;
+    return P;
 }
 
-// Complex polynomial: (real part, imaginary part)
-using CPoly = pair<vector<long long>, vector<long long>>;
-
-// Optimized complex poly multiply: 4 forward NTTs + 2 inverse NTTs (instead of 12)
-CPoly cpoly_mul(CPoly A, CPoly B) {
-    int sa = A.first.size(), sb = B.first.size();
-    int sz = sa + sb - 1;
-    int n = 1;
-    while (n < sz) n <<= 1;
-
-    A.first.resize(n); A.second.resize(n);
-    B.first.resize(n); B.second.resize(n);
-
-    ntt(A.first, false);
-    ntt(A.second, false);
-    ntt(B.first, false);
-    ntt(B.second, false);
-
-    vector<long long> R(n), I(n);
-    for (int i = 0; i < n; i++) {
-        long long ar = A.first[i], ai = A.second[i];
-        long long br = B.first[i], bi = B.second[i];
-        R[i] = (ar * br % MOD - ai * bi % MOD + MOD) % MOD;
-        I[i] = (ar * bi % MOD + ai * br % MOD) % MOD;
-    }
-
-    ntt(R, true);
-    ntt(I, true);
-    R.resize(sz);
-    I.resize(sz);
-    return {move(R), move(I)};
-}
-
-vector<CPoly> leaves;
-
-CPoly build(int l, int r) {
-    if (r - l == 1) return leaves[l];
+// 분할 정복을 통한 다항식 곱셈
+CPoly solve_poly(int l, int r, const vector<pair<int, int>>& points) {
+    if (l == r) return make(points[l].first, points[l].second);
     int mid = (l + r) / 2;
-    return cpoly_mul(build(l, mid), build(mid, r));
+    return solve_poly(l, mid, points) * solve_poly(mid + 1, r, points);
 }
 
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
 
-    int N; long long R;
-    cin >> N >> R;
+    int N;
+    ll R;
+    if (!(cin >> N >> R)) return 0;
 
-    leaves.resize(N);
+    vector<pair<int, int>> points(N);
     for (int i = 0; i < N; i++) {
-        long long x, y;
+        int x, y;
         cin >> x >> y;
-        x %= MOD; if (x < 0) x += MOD;
-        y %= MOD; if (y < 0) y += MOD;
-        long long nx = (MOD - x) % MOD;
-        long long ny = (MOD - y) % MOD;
-        leaves[i] = {{nx, 1}, {ny, 0}};
+        points[i] = { (x % MOD + MOD) % MOD, (y % MOD + MOD) % MOD };
     }
 
-    auto [PR, PI] = build(0, N);
+    // 모든 (z - Z_j) 곱하기
+    CPoly Q = solve_poly(0, N - 1, points);
 
-    // Precompute modular inverses 1..N+1
-    vector<long long> inv_arr(N + 2);
-    inv_arr[1] = 1;
-    for (int i = 2; i <= N + 1; i++)
-        inv_arr[i] = (MOD - MOD / i) * inv_arr[MOD % i] % MOD;
+    ll ans = 0;
+    ll R2 = (R % MOD) * (R % MOD) % MOD;
+    ll current_R2k = 1;
 
-    R %= MOD;
-    long long R2 = R * R % MOD;
-    long long Rpow = 1;
-    long long ans = 0;
-
+    // 기댓값 E = sum |c_k|^2 * R^(2k) / (k + 1)
     for (int k = 0; k <= N; k++) {
-        long long re = PR[k], im = PI[k];
-        long long a2 = (re * re % MOD + im * im % MOD) % MOD;
-        ans = (ans + a2 * Rpow % MOD * inv_arr[k + 1]) % MOD;
-        Rpow = Rpow * R2 % MOD;
+        ll mag_sq = (1LL * Q.rea[k] * Q.rea[k] + 1LL * Q.ima[k] * Q.ima[k]) % MOD;
+        ll term = mag_sq * current_R2k % MOD;
+        term = term * inv(k + 1) % MOD;
+        
+        ans = (ans + term) % MOD;
+        current_R2k = current_R2k * R2 % MOD;
     }
 
-    cout << ans << "\n";
+    cout << ans << endl;
+
     return 0;
 }
