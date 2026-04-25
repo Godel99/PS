@@ -4,7 +4,7 @@ using ll = long long;
 
 int main(){
     cin.tie(0); cout.tie(0); ios::sync_with_stdio(false);
-    const int SIZE = 122333;
+    const int SIZE = 1'048'576;
     int n, AB, CD, cnt, LM; cin >> n;
     vector<int> A(n), B(n), C(n), D(n), NB(n, 0), ND(n, 0);
     for(int i = 0; i < n; i++){
