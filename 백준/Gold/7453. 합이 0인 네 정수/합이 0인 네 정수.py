@@ -3,7 +3,7 @@ input = lambda: sys.stdin.readline().rstrip()
 print = lambda *args, sep=" ", end="\n": sys.stdout.write(sep.join(map(str, args)) + end)
 
 def main():
-    SIZE = 2**20
+    SIZE = 122333
     n = int(input())
     A, B, C, D = [0]*n, [0]*n, [0]*n, [0]*n
     for i in range(n): 
