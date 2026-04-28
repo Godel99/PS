@@ -8,7 +8,6 @@ int main(){
     unordered_map<ll, ll> memo;
     function<ll(ll)> bitcnt = [&](ll n) -> ll{
         if(n == 0) return 0;
-        if(n == 1) return 1;
         if (memo.count(n)) return memo[n];
         ll k = 0;
         while(1LL << (k+1) <= n) k++;
