@@ -1,10 +1,10 @@
 # [level 3] 표 편집 - 81303 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/81303) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/81303?language=cpp) 
 
 ### 성능 요약
 
-메모리: 110 MB, 시간: 363.10 ms
+메모리: 30.7 MB, 시간: 13.76 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 04월 29일 10:06:40
+2026년 04월 29일 10:21:17
 
 ### 문제 설명
 
