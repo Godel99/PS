@@ -1,10 +1,10 @@
 # [level 3] 미로 탈출 명령어 - 150365 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/150365?language=python3) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/150365?language=cpp) 
 
 ### 성능 요약
 
-메모리: 11.9 MB, 시간: 7.18 ms
+메모리: 9.96 MB, 시간: 6.90 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 05월 04일 14:22:08
+2026년 05월 04일 14:22:57
 
 ### 문제 설명
 
