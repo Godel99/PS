@@ -30,3 +30,6 @@
 
 <p> </p>
 
+<span style="color: #ff0000;">**안녕**)
+<font color="red">빨간색 텍스트</font>
+<font color="#007bff">파란색 텍스트 (HEX 코드)</font>
